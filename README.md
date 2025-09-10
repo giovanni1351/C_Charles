@@ -1,9 +1,11 @@
 
 # Lista de Tokens
 - id: [a-zA-Z][a-zA-Z0-9]*
-- palavras_reservadas: (string | float | int | for |while | if | else | else if | input | console)
+- palavras_reservadas: (string | boolean | float | int | for |while | if | else | else if | input | console)
 - operador_atribuicao: "<-"
-- operador_matematico: (+ | - | / | *)
+- operador_matematico: ("+" | "-" | "/" | "*" | "%")
+- operador_logico: ("&&' | "||" | "NOT")
+- operador_relacional: (">" | "<" | ">="| "<=" | "=" | "!=")
 - abre_parenteses: "("
 - fecha_parenteses: ")"
 - abre_chaves: "{"
@@ -12,3 +14,4 @@
 - numero_inteiro: [0-9]+i
 - numero_decimal: [0-9]+.[0-9]+f
 - textos: "[a-z _ A-Z 0-9 ]*"
+  
