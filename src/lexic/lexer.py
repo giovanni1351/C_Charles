@@ -6,6 +6,7 @@ from lexic.operators import (
     EndLineOperator,
     IdentifierOperator,
     MathOperator,
+    KeyWordOperator,
 )
 from lexic.token_lexico import Token
 from utils.character_iterator import CharacterIterator
@@ -21,6 +22,7 @@ class Lexer:
         self.afds = []
         self.tokens = []
         self.afds = [
+            KeyWordOperator(),
             MathOperator(),
             DecimalOperator(),
             IdentifierOperator(),

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Main:
     def __init__(self) -> None:
-        code: str = "+++---***////;;; teste teste1 teste2* 12213i12a23b21 232"
+        code: str = "+++---***////;;; teste teste1 teste2* 12213i12a23b21 232 string float int for while if else else if input console"
         lexer: Lexer = Lexer(code)
         tokens: list[Token] = lexer.get_token()
         for token in tokens:
