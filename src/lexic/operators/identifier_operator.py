@@ -8,26 +8,22 @@ from utils.character_iterator import CharacterIterator
 class IdentifierOperator(AFD):
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
-        atual = code.current()
+        characters: str = ""
+        i = code.get_index()
+        while True:
+            atual: str | None = code[i]
+            if atual is None:
+                break
+            i += 1
+            if atual in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY":
+                characters += atual
+                continue
+            if atual in "0123456789" and len(characters) > 1:
+                characters += atual
+                continue
+            break
+        code.set_index(i)
+        if len(characters) > 0:
+            return Token(tipo="ID", lexema=characters)
 
-        match atual:
-            case "+":
-                next(code)
-                return Token("PLUS", "+")
-            case "-":
-                next(code)
-                return Token("MINUS", "-")
-
-            case "*":
-                next(code)
-                return Token("TIMES", "*")
-
-            case "/":
-                next(code)
-                return Token("DIVIDE", "/")
-
-            case None:
-                return Token("EOF", "$")
-
-            case _:
-                return None
+        return None

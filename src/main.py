@@ -6,12 +6,7 @@ from lexic.token_lexico import Token
 
 class Main:
     def __init__(self) -> None:
-        # identifier: Token = Token("ID", "Resultado")
-        # num = Token("NUM", "3")
-        # print(identifier)
-        # print(num)
-
-        code: str = "+++---***////"
+        code: str = "+++---***////;;; teste teste1 teste2* asdasd "
         lexer: Lexer = Lexer(code)
         tokens: list[Token] = lexer.get_token()
         for token in tokens:
