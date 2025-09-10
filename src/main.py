@@ -6,7 +6,7 @@ from lexic.token_lexico import Token
 
 class Main:
     def __init__(self) -> None:
-        code: str = "+++---***////;;; teste teste1 teste2* asdasd "
+        code: str = "+++---***////;;; teste teste1 teste2* 12213 12 23 21 232"
         lexer: Lexer = Lexer(code)
         tokens: list[Token] = lexer.get_token()
         for token in tokens:

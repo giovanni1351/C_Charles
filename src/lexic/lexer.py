@@ -1,6 +1,7 @@
 from typing import cast
 
 from lexic.afd import AFD
+from lexic.operators.decimal_operator import DecimalOperator
 from lexic.operators.end_line_operator import EndLineOperator
 from lexic.operators.identifier_operator import IdentifierOperator
 from lexic.operators.math_operator import MathOperator
@@ -17,7 +18,12 @@ class Lexer:
         self.code = CharacterIterator(code)
         self.afds = []
         self.tokens = []
-        self.afds = [MathOperator(), IdentifierOperator(), EndLineOperator()]
+        self.afds = [
+            MathOperator(),
+            DecimalOperator(),
+            IdentifierOperator(),
+            EndLineOperator(),
+        ]
 
     def skip_white_space(self) -> None:
         while self.code.current() == " " or self.code.current() == "\n":
