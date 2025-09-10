@@ -12,7 +12,7 @@ class Main:
         print(identifier)
         print(num)
 
-        code: str = "+++"
+        code: str = "+++---***////"
         lexer: Lexer = Lexer(code)
         tokens: list[Token] = lexer.get_token()
         for token in tokens:

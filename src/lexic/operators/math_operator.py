@@ -14,6 +14,18 @@ class MathOperator(AFD):
             case "+":
                 next(code)
                 return Token("PLUS", "+")
+            case "-":
+                next(code)
+                return Token("MINUS", "-")
+
+            case "*":
+                next(code)
+                return Token("TIMES", "*")
+
+            case "/":
+                next(code)
+                return Token("DIVIDE", "/")
+
             case None:
                 return Token("EOF", "$")
             case _:
