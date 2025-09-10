@@ -2,15 +2,14 @@ from rich import print  # noqa: A004
 
 from lexic.lexer import Lexer
 from lexic.token_lexico import Token
-from utils.character_iterator import CharacterIterator
 
 
 class Main:
     def __init__(self) -> None:
-        identifier: Token = Token("ID", "Resultado")
-        num = Token("NUM", "3")
-        print(identifier)
-        print(num)
+        # identifier: Token = Token("ID", "Resultado")
+        # num = Token("NUM", "3")
+        # print(identifier)
+        # print(num)
 
         code: str = "+++---***////"
         lexer: Lexer = Lexer(code)
@@ -21,5 +20,3 @@ class Main:
 
 if __name__ == "__main__":
     Main()
-    exemplo = "asdasdsadas"
-    iterador = CharacterIterator(exemplo)

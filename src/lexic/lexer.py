@@ -1,4 +1,7 @@
+from typing import cast
+
 from lexic.afd import AFD
+from lexic.operators.identifier_operator import IdentifierOperator
 from lexic.operators.math_operator import MathOperator
 from lexic.token_lexico import Token
 from utils.character_iterator import CharacterIterator
@@ -13,7 +16,7 @@ class Lexer:
         self.code = CharacterIterator(code)
         self.afds = []
         self.tokens = []
-        self.afds.append(MathOperator())
+        self.afds = [MathOperator(), IdentifierOperator()]
 
     def skip_white_space(self) -> None:
         while self.code.current() == " " or self.code.current() == "\n":
@@ -27,7 +30,6 @@ class Lexer:
         pos: int = self.code.get_index()
         for afd in self.afds:
             t: Token | None = afd.evaluate(self.code)
-            print(t)
             if t is not None:
                 return t
             self.code.set_index(pos)
@@ -43,4 +45,6 @@ class Lexer:
 
             if t and t.tipo == "EOF":
                 break
+            t = cast("Token", t)
+            self.tokens.append(t)
         return self.tokens
