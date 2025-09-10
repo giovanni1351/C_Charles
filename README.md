@@ -1,6 +1,6 @@
 
 # Lista de Tokens
-- id: [a-z _ A-Z] +
+- id: [a-zA-Z][a-zA-Z0-9]*
 - palavras_reservadas: (string | float | int | for |while | if | else | else if | input | console)
 - operador_atribuicao: "<-"
 - operador_matematico: (+ | - | / | *)
