@@ -5,8 +5,8 @@ from lexic.operators import (
     DecimalOperator,
     EndLineOperator,
     IdentifierOperator,
-    MathOperator,
     KeyWordOperator,
+    MathOperator,
 )
 from lexic.token_lexico import Token
 from utils.character_iterator import CharacterIterator

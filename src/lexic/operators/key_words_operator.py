@@ -1,4 +1,4 @@
-from typing import override
+from typing import ClassVar, override
 
 from lexic.afd import AFD
 from lexic.token_lexico import Token
@@ -6,8 +6,18 @@ from utils.character_iterator import CharacterIterator
 
 
 class KeyWordOperator(AFD):
-
-    key_words_list:list = ["string", "float", "int", "for", "while", "if", "else", "else if", "input", "console"]
+    key_words_list: ClassVar[list[str]] = [
+        "string",
+        "float",
+        "int",
+        "for",
+        "while",
+        "if",
+        "else",
+        "else if",
+        "input",
+        "console",
+    ]
 
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
@@ -29,8 +39,7 @@ class KeyWordOperator(AFD):
                 continue
             break
         code.set_index(i)
-        if len(characters) > 0:
-            if characters in self.key_words_list:
-                return Token("Palavra_Reservada", characters)
+        if len(characters) > 0 and characters in self.key_words_list:
+            return Token("RESERVED", characters)
 
         return None

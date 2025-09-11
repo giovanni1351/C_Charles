@@ -10,7 +10,7 @@ class IdentifierOperator(AFD):
     def evaluate(self, code: CharacterIterator) -> Token | None:
         characters: str = ""
         i = code.get_index()
-        if code[i] is None:
+        if code.is_done:
             return Token("EOF", "$")
         while True:
             atual: str | None = code[i]
