@@ -7,4 +7,4 @@ class Token:
         self.lexema = lexema
 
     def __str__(self) -> str:
-        return f"<{self.tipo}, {self.lexema}>"
+        return f"<{self.tipo}, {self.lexema!r}>"

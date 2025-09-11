@@ -1,17 +1,40 @@
+# Como rodar?
+
+O projeto é feito utilizando o gerenciador de pacotes UV, para rodar como o esperado é necessário ter instalado em sua maquina ou então, criar um ambiente virtual e instalar o rich com o seu gerenciador de pacotes (ele é a unica dependencia).
+Caso prefira, é possivel rodar com o python global caso tenha o rich instalado
+
+Caso você ja tenha o UV instalado no seu computador, basta entrar pelo terminal
+na pasta onde contem o arquivo [pyproject.py](pyproject.toml) e rodar o comando
+
+```bash
+uv run src/main.py
+```
+
+Caso deseje instalar o uv o basta clickar no seguinte link: [UV Astral](https://docs.astral.sh/uv/getting-started/installation/)
+
+O projeto é desenvolvido em python utilizando ferramentas para tipagem e linting.
+
+Utilizamos o ruff (formater e linter) e pyright (type checker). Eles nos trazem um padrão com o mercado.
+
+## Dependencias
+
+O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, para a criação de prints coloridos, apenas para questão estética.
 
 # Lista de Tokens
-- id: [a-zA-Z][a-zA-Z0-9]*
-- palavras_reservadas: (string | boolean | float | int | for |while | if | else | else if | input | console)
-- operador_atribuicao: "<-"
-- operador_matematico: ("+" | "-" | "/" | "*" | "%")
-- operador_logico: ("&&' | "||" | "NOT")
-- operador_relacional: (">" | "<" | ">="| "<=" | "=" | "!=")
-- abre_parenteses: "("
-- fecha_parenteses: ")"
-- abre_chaves: "{"
-- fecha_chaves: "}"
-- fim_instrucao: ";"
-- numero_inteiro: [0-9]+i
-- numero_decimal: [0-9]+.[0-9]+f
-- textos: "[a-z _ A-Z 0-9 ]*"
-  
+
+> Abaixo estão todos os tokens aceitos pelo analizador lexico.
+
+- **id** : [a-zA-Z][a-zA-Z0-9]\*
+- **palavras_reservadas**: (string | boolean | float | int | for |while | if | else | else if | input | console)
+- **operador_atribuicao**: "<-"
+- **operador_matematico**: ("+" | "-" | "/" | "\*" | "%")
+- **operador_logico**: ("&&' | "||" | "NOT")
+- **operador_relacional**: (">" | "<" | ">="| "<=" | "=" | "!=")
+- **abre_parenteses**: "("
+- **fecha_parenteses**: ")"
+- **abre_chaves**: "{"
+- **fecha_chaves**: "}"
+- **fim_instrucao**: ";"
+- **numero_inteiro**: [0-9]+i
+- **numero_decimal**: [0-9]+.[0-9]+f
+- **textos**: [a-z _ A-Z 0-9 ]\*

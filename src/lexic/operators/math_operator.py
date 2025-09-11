@@ -26,6 +26,22 @@ class MathOperator(AFD):
                 next(code)
                 return Token("DIVIDE", "/")
 
+            case "%":
+                next(code)
+                return Token("MODULE", "%")
+
+            case "<":
+                next(code)
+                return Token("LESS", "<")
+
+            case ">":
+                next(code)
+                return Token("GREATER", ">")
+
+            case "=":
+                next(code)
+                return Token("EQUAL", "=")
+
             case None:
                 return Token("EOF", "$")
             case _:
