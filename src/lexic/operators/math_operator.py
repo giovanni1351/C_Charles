@@ -13,34 +13,22 @@ class MathOperator(AFD):
         match atual:
             case "+":
                 next(code)
-                return Token("PLUS", "+")
+                return Token("MATH_OP", "+")
             case "-":
                 next(code)
-                return Token("MINUS", "-")
+                return Token("MATH_OP", "-")
 
             case "*":
                 next(code)
-                return Token("TIMES", "*")
+                return Token("MATH_OP", "*")
 
             case "/":
                 next(code)
-                return Token("DIVIDE", "/")
+                return Token("MATH_OP", "/")
 
             case "%":
                 next(code)
-                return Token("MODULE", "%")
-
-            case "<":
-                next(code)
-                return Token("LESS", "<")
-
-            case ">":
-                next(code)
-                return Token("GREATER", ">")
-
-            case "=":
-                next(code)
-                return Token("EQUAL", "=")
+                return Token("MATH_OP", "%")
 
             case None:
                 return Token("EOF", "$")

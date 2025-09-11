@@ -6,6 +6,7 @@ from lexic.operators import (
     EndLineOperator,
     IdentifierOperator,
     KeyWordOperator,
+    LogicOperator,
     MathOperator,
 )
 from lexic.token_lexico import Token
@@ -22,11 +23,12 @@ class Lexer:
         self.afds = []
         self.tokens = []
         self.afds = [
-            KeyWordOperator(),
-            MathOperator(),
             DecimalOperator(),
-            IdentifierOperator(),
             EndLineOperator(),
+            KeyWordOperator(),
+            IdentifierOperator(),
+            LogicOperator(),
+            MathOperator(),
         ]
 
     def skip_white_space(self) -> None:
