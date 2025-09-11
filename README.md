@@ -38,3 +38,61 @@ O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, p
 - **numero_inteiro**: [0-9]+i
 - **numero_decimal**: [0-9]+.[0-9]+f
 - **textos**: [a-z _ A-Z 0-9 ]\*
+
+# Gramatica
+
+> Exemplos da sintaxe da nossa linguagem
+> obs: Linguagem livre de contexto ainda não feita, está em nossos proximos steps
+
+- **Input**
+
+```
+int variavel;
+variavel << input;
+```
+
+- **Console output**
+
+```
+console << variavel;
+```
+
+- **Controle de fluxo**
+
+```
+int variavel;
+variavel << input;
+if (variavel > 10) ->{
+  console << variavel
+} else if (variavel < -10) ->{
+  console << "Variavel menor que -10";
+} else ->{
+  console << "Esta dentro do intervalo -10 e 10";
+}
+
+```
+
+- **Atribuição**
+
+```
+int variavel <- 30;
+variavel <- variavel + 3;
+console << variavel;
+```
+
+- **Operadores logicos**
+
+```
+int variavel;
+variavel << input;
+bool estaNoIntervalo;
+if ( variavel > 10 && variavel < 30 ) -> {
+  estaNoIntervalo = true;
+}
+if (!estaNoIntervalor){
+  console << "Não está no intervalo";
+}
+if(variavel = 30){
+  console<< "A variavel é exatamente 30";
+}
+```
