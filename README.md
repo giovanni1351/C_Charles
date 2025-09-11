@@ -28,7 +28,7 @@ O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, p
 - **palavras_reservadas**: (string | boolean | float | int | for |while | if | else | else if | input | console)
 - **operador_atribuicao**: "<-"
 - **operador_matematico**: ("+" | "-" | "/" | "\*" | "%")
-- **operador_logico**: ("&&' | "||" | "NOT")
+- **operador_logico**: ("&&' | "||" | "!")
 - **operador_relacional**: (">" | "<" | ">="| "<=" | "=" | "!=")
 - **abre_parenteses**: "("
 - **fecha_parenteses**: ")"
