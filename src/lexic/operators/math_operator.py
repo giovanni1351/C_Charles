@@ -8,7 +8,7 @@ from utils.character_iterator import CharacterIterator
 class MathOperator(AFD):
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
-        atual = code.current()
+        atual: str | None = code.current()
 
         match atual:
             case "+":

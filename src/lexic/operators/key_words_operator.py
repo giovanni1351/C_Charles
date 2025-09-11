@@ -22,7 +22,7 @@ class KeyWordOperator(AFD):
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
         characters: str = ""
-        i = code.get_index()
+        i: int = code.get_index()
         if code[i] is None:
             return Token("EOF", "$")
         while True:
