@@ -1,3 +1,4 @@
+from string import ascii_letters
 from typing import ClassVar, override
 
 from lexic.afd import AFD
@@ -16,6 +17,7 @@ class KeyWordOperator(AFD):
         "else",
         "else if",
         "input",
+        "boolean",
         "console",
     ]
 
@@ -29,7 +31,7 @@ class KeyWordOperator(AFD):
             atual: str | None = code[i]
             if atual is None:
                 break
-            if atual in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY":
+            if atual in ascii_letters:
                 characters += atual
                 i += 1
                 continue
@@ -38,7 +40,7 @@ class KeyWordOperator(AFD):
                 i += 1
                 continue
             break
-        code.set_index(i)
+        code.set_index(new_index=i)
         if len(characters) > 0 and characters in self.key_words_list:
             return Token("RESERVED", characters)
 

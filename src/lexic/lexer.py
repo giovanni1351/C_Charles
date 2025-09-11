@@ -19,7 +19,7 @@ class Lexer:
     code: CharacterIterator
 
     def __init__(self, code: str) -> None:
-        self.code = CharacterIterator(code)
+        self.code = CharacterIterator(string=code)
         self.afds = []
         self.tokens = []
         self.afds = [

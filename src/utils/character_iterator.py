@@ -1,6 +1,6 @@
 class CharacterIterator:
     def __init__(self, string: str) -> None:
-        self.string = string
+        self.string: str = string
         self._index: int = 0
         self.is_done: bool = False
 
