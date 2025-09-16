@@ -30,6 +30,7 @@ O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, p
 - **operador_matematico**: ("+" | "-" | "/" | "\*" | "%")
 - **operador_logico**: ("&&' | "||" | "!")
 - **operador_relacional**: (">" | "<" | ">="| "<=" | "=" | "!=")
+- **Operador saida**: "<<"
 - **abre_parenteses**: "("
 - **fecha_parenteses**: ")"
 - **abre_chaves**: "{"

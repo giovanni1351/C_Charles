@@ -2,12 +2,14 @@ from typing import cast
 
 from lexic.afd import AFD
 from lexic.operators import (
+    BracketsOperator,
     DecimalOperator,
     EndLineOperator,
     IdentifierOperator,
     KeyWordOperator,
     LogicOperator,
     MathOperator,
+    StringOperator,
 )
 from lexic.token_lexico import Token
 from utils.character_iterator import CharacterIterator
@@ -24,6 +26,8 @@ class Lexer:
         self.tokens = []
         self.afds = [
             DecimalOperator(),
+            StringOperator(),
+            BracketsOperator(),
             EndLineOperator(),
             KeyWordOperator(),
             IdentifierOperator(),

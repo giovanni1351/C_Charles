@@ -16,6 +16,9 @@ class LogicOperator(AFD):
                 if code.current() == "=":
                     next(code)
                     return Token("LOGIC_OP", "<=")
+                if code.current() == "<":
+                    next(code)
+                    return Token("OUTPUT", "<<")
                 return Token("LOGIC_OP", "<")
 
             case ">":
@@ -25,9 +28,19 @@ class LogicOperator(AFD):
                     return Token("LOGIC_OP", ">=")
                 return Token("LOGIC_OP", ">")
 
+            case "&":
+                next(code)
+                if code.current() == "&":
+                    next(code)
+                    return Token("LOGIC_OP", "&&")
+                return Token("LOGIC_OP", "&")
+
             case "=":
                 next(code)
                 return Token("LOGIC_OP", "=")
+            case "!":
+                next(code)
+                return Token("LOGIC_OP", "!")
 
             case None:
                 return Token("EOF", "$")
