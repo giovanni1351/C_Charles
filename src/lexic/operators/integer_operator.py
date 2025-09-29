@@ -5,7 +5,7 @@ from lexic.token_lexico import Token
 from utils.character_iterator import CharacterIterator
 
 
-class DecimalOperator(AFD):
+class IntegerOperator(AFD):
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
         characters: str = ""
@@ -20,9 +20,11 @@ class DecimalOperator(AFD):
                 characters += atual
                 i += 1
                 continue
+            if atual == ".":
+                return None
             break
         code.set_index(i)
         if len(characters) > 0:
-            return Token(tipo="DECIMAL", lexema=characters)
+            return Token(tipo="INTEGER", lexema=characters)
 
         return None

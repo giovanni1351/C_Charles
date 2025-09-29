@@ -3,9 +3,10 @@ from typing import cast
 from lexic.afd import AFD
 from lexic.operators import (
     BracketsOperator,
-    DecimalOperator,
     EndLineOperator,
+    FloatOperator,
     IdentifierOperator,
+    IntegerOperator,
     KeyWordOperator,
     LogicOperator,
     MathOperator,
@@ -25,7 +26,8 @@ class Lexer:
         self.afds = []
         self.tokens = []
         self.afds = [
-            DecimalOperator(),
+            IntegerOperator(),
+            FloatOperator(),
             StringOperator(),
             BracketsOperator(),
             EndLineOperator(),

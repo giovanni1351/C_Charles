@@ -10,3 +10,7 @@ if (!estaNoIntervalor){
 if(variavel = 30){
   console<<" A 8===D variavel é exatamente 30";
 }
+
+
+999.999;
+9999
