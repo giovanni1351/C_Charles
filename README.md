@@ -36,8 +36,8 @@ O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, p
 - **abre_chaves**: "{"
 - **fecha_chaves**: "}"
 - **fim_instrucao**: ";"
-- **numero_inteiro**: [0-9]+i
-- **numero_decimal**: [0-9]+.[0-9]+f
+- **numero_inteiro**: [0-9]
+- **numero_decimal**: [0-9]+.[0-9]
 - **textos**: [a-z _ A-Z 0-9 ]\*
 
 # Gramatica
