@@ -9,7 +9,7 @@
 - **expressão** -> expressão operador_matemático fator | fator
 - **fator** -> num | id | '(' expressão ')'
 - **leitura** -> id '<<' 'input' ';'
-- **escrita** -> 'console' '<<' id;
+- **escrita** -> 'console' '<<' id; | 'console' '<<' texto_string
 - **atribuicao** -> id '<-' expressão; | id '<-' texto_string;
 - **texto_string** -> '"'[a-zA-Z 0-9]'"'
 - **num** -> num_int | num_decimal
