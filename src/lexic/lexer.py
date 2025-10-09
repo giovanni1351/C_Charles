@@ -42,7 +42,21 @@ class Lexer:
             next(self.code)
 
     def error(self) -> None:
-        msg = f"Error: Token not recognized: {self.code.current()}"
+        line = 1
+        column = 1
+        for i, character in enumerate(self.code.string):
+            if i == self.code.get_index() and character == self.code.current():
+                break
+            if character == "\n":
+                line += 1
+                column = 1
+                continue
+            column += 1
+
+        msg = (
+            f"Error: Token not recognized: {self.code.current()} error"
+            f" in {line = } and {column = }"
+        )
         raise RuntimeError(msg)
 
     def search_next_token(self) -> Token | None:

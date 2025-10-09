@@ -1,4 +1,4 @@
-int variavel;
+@int variavel;
 variavel << input;
 bool estaNoIntervalo;
 if ( variavel > 10 && variavel < 30 ) -> {
