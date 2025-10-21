@@ -5,20 +5,32 @@
 - **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar
 - **declarar** -> tipo id ';' | tipo atribuicao
 - **cmd_if** -> 'if' '('condicional')' '->' '{' bloco '}' | 'if' '('condicional')' '->' '{' bloco '}' 'else' '{' bloco'}'
-- **condicional** -> expressão operador_relacional expressão | condicional operador_logico condicional | '!' expressão
 
 ---
 
 > Antes
 
-- **expressão** -> expressão + exp_prioridade | expressão - exp_prioridade | exp_prioridade
+- **condicional** -> expressão operador_relacional expressão | condicional operador_logico condicional | '!' expressão
+
+---
+
+> Ajustado
+
+- **condicional** -> expressão operador_relacional expressão condicional' |'!' expressão condicional'
+- **condicional'** -> operador_logico condicional condicional'
+
+---
+
+> Antes
+
+- **expressão** -> expressão '+' exp_prioridade | expressão '-' exp_prioridade | exp_prioridade
 
 ---
 
 > Ajustado
 
 - **expressão** -> exp_prioridade expressão'
-- **expressão'** -> + exp_prioridade expressão' | - exp_prioridade expressão' | e
+- **expressão'** -> '+' exp_prioridade expressão' | - '-' exp_prioridade expressão' | e
 
 ---
 
@@ -26,20 +38,20 @@
 
 > Antes
 
-- **exp_prioridade** -> exp_prioridade \* Fator | exp_prioridade / Fator | Fator
+- **exp_prioridade** -> exp_prioridade '\*' Fator | exp_prioridade '/' Fator | Fator
 
 ---
 
 > Ajustado
 
 - **exp_prioridade** -> Fator exp_prioridade'
-- **exp_prioridade'** -> \* Fator exp_prioridade' | / Fator exp_prioridade' | e
+- **exp_prioridade'** -> '\*' Fator exp_prioridade' | '/' Fator exp_prioridade' | e
 
 ---
 
-- **Fator** -> id | num | (expressão)
+- **Fator** -> id | num | '(' expressão ')'
 - **leitura** -> id '<<' 'input' ';'
-- **escrita** -> 'console' '<<' id; | 'console' '<<' texto_string
+- **escrita** -> 'console' '<<' id ';' | 'console' '<<' texto_string ';'
 - **atribuicao** -> id '<-' expressão; | id '<-' texto_string;
 - **texto_string** -> '"'[a-zA-Z 0-9]'"'
 - **num** -> num_int | num_decimal
