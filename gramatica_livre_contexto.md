@@ -22,3 +22,5 @@
 - **num_decimal** -> [0-9]+.[0-9]+
 - **loop_for** -> 'for' '(' declarar ';' condicional ';' atribuicao ')' '->' '{' bloco '}'
 - **loop_while** -> 'if' '('condicional')' '->' '{' bloco '}'
+
+.
