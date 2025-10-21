@@ -6,8 +6,37 @@
 - **declarar** -> tipo id ';' | tipo atribuicao
 - **cmd_if** -> 'if' '('condicional')' '->' '{' bloco '}' | 'if' '('condicional')' '->' '{' bloco '}' 'else' '{' bloco'}'
 - **condicional** -> expressão operador_relacional expressão | condicional operador_logico condicional | '!' expressão
+
+---
+
+> Antes
+
 - **expressão** -> expressão + exp_prioridade | expressão - exp_prioridade | exp_prioridade
+
+---
+
+> Ajustado
+
+- **expressão** -> exp_prioridade expressão'
+- **expressão'** -> + exp_prioridade expressão' | - exp_prioridade expressão' | e
+
+---
+
+---
+
+> Antes
+
 - **exp_prioridade** -> exp_prioridade \* Fator | exp_prioridade / Fator | Fator
+
+---
+
+> Ajustado
+
+- **exp_prioridade** -> Fator exp_prioridade'
+- **exp_prioridade'** -> \* Fator exp_prioridade' | / Fator exp_prioridade' | e
+
+---
+
 - **Fator** -> id | num | (expressão)
 - **leitura** -> id '<<' 'input' ';'
 - **escrita** -> 'console' '<<' id; | 'console' '<<' texto_string
@@ -21,6 +50,6 @@
 - **num_int** -> [0-9]+
 - **num_decimal** -> [0-9]+.[0-9]+
 - **loop_for** -> 'for' '(' declarar ';' condicional ';' atribuicao ')' '->' '{' bloco '}'
-- **loop_while** -> 'if' '('condicional')' '->' '{' bloco '}'
+- **loop_while** -> 'while' '('condicional')' '->' '{' bloco '}'
 
 .
