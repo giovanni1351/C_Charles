@@ -1,10 +1,10 @@
 # Gramática livre de contexto
 
-- **programa** -> tipo 'charles()' '{' bloco '}'
+- **programa** -> tipo 'charles()' '->' '{' bloco '}'
 - **bloco** -> cmd bloco_options
 - **bloco_options** -> bloco | e
 - **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar
-- **declararc** -> tipo declarar_options
+- **declarar** -> tipo declarar_options
 - **declarar_options** -> id ';' |atribuicao
 - **cmd_if** -> 'if' '('condicional')' '->' '{' bloco '}' option_else
 - **option_else** -> 'else' '{' bloco'}' | e

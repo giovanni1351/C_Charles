@@ -1,16 +1,18 @@
-int variavel;
-variavel << input;
-bool estaNoIntervalo;
-if ( variavel > 10 && variavel < 30 ) -> {
-  estaNoIntervalo = true;
-}
-if (!estaNoIntervalor){
-  console << " Não está no intervalo " ;
-}
-if(variavel = 30){
-  console<<" A 8===D variavel é exatamente 30";
-}
+int charles() -> {
 
 
-999.999;
-9999 9999 999 999 999.999 999.9 
+  int variavel;
+  variavel << input;
+  bool estaNoIntervalo;
+  if ( variavel > 10 && variavel < 30 ) -> {
+    estaNoIntervalo = true;
+  }
+  if (!estaNoIntervalor){
+    console << " Não está no intervalo " ;
+  }
+  if(variavel = 30){
+    console<<" A 8===D variavel é exatamente 30";
+  }
+
+
+}
