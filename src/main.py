@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from rich import print  # noqa: A004
 
 from lexic.lexer import Lexer
+from lexic.parser import Parser
 
 if TYPE_CHECKING:
     from lexic.token_lexico import Token
@@ -27,6 +28,8 @@ class Main:
             tokens: list[Token] = lexer.get_token()
             for token in tokens:
                 print(token)
+            parser = Parser(tokens)
+            parser.main()
 
 
 if __name__ == "__main__":
