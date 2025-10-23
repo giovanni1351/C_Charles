@@ -149,7 +149,13 @@ class Parser:
     def fator(self) -> bool: ...
 
     @visualizar_exec
-    def leitura(self) -> bool: ...
+    def leitura(self) -> bool:
+        return (
+            self.id()
+            and self.match_l("<<")
+            and self.match_l("input")
+            and self.match_l(";")
+        )
 
     @visualizar_exec
     def escrita(self) -> bool: ...
