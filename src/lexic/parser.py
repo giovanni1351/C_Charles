@@ -8,7 +8,7 @@ class Parser:
 
     def main(self) -> None:
         self.token = self.get_next_token()
-        if self.ifelse() and self.match_t("EOF"):
+        if self.cmd_if() and self.match_t("EOF"):
             print("Sintaticamente correto")
         else:
             self._erro("main")
@@ -23,32 +23,34 @@ class Parser:
         print("Token invalido", self.token)
         print("----" * 10)
 
-    def ifelse(self) -> bool:
+    def cmd_if(self) -> bool:
         if (
             self.match_l("if")
-            and self.condicao()
-            and self.match_l("then")
+            and self.match_l("(")
+            and self.condicional()
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
             and self.expressao()
-            and self.match_l("else")
-            and self.expressao()
+            and self.match_l("}")
+            and self.option_else()
         ):
             return True
         self._erro("ifelse")
         return False
 
-    def condicao(self) -> bool:
-        if self.id() and self.operador() and self.num():
+    def option_else(self) -> bool:
+        if (
+            self.match_l("else")
+            and self.match_l("{")
+            and self.bloco()
+            and self.match_l("}")
+        ):
             return True
+        return True
 
-        self._erro("condicao")
-        return False
-
-    def expressao(self) -> bool:
-        if self.id() and self.operador_atribuicao() and self.num():
-            return True
-
-        self._erro("Expressão")
-        return False
+    def bloco(self) -> bool:
+        return self.cmd() and self.bloco_options()
 
     def operador(self) -> bool:
         if self.match_t("operador_condicional"):
@@ -73,6 +75,72 @@ class Parser:
             return True
         self._erro("num")
         return False
+
+    def programa(self) -> bool:
+        return bool(
+            self.tipo()
+            and self.match_l("charles()")
+            and self.match_l("{")
+            and self.bloco()
+            and self.match_l("}")
+        )
+
+    def bloco_options(self) -> bool:
+        if self.bloco():
+            return True
+        return True
+
+    def cmd(self) -> bool:
+        if self.leitura():
+            return True
+        if self.escrita():
+            return True
+
+        if self.atribuicao():
+            return True
+
+        if self.cmd_if():
+            return True
+
+        return self.declarar()
+
+    def declarar(self) -> bool: ...
+
+    def declarar_options(self) -> bool: ...
+
+    def condicional(self) -> bool: ...
+
+    def expressao(self) -> bool: ...
+
+    def exp_prioridade(self) -> bool: ...
+
+    def fator(self) -> bool: ...
+
+    def leitura(self) -> bool: ...
+
+    def escrita(self) -> bool: ...
+
+    def escrita_options(self) -> bool: ...
+
+    def atribuicao(self) -> bool: ...
+
+    def atribuicao_options(self) -> bool: ...
+
+    def texto_string(self) -> bool: ...
+
+    def operador_relacional(self) -> bool: ...
+
+    def tipo(self) -> bool: ...
+
+    def operador_logico(self) -> bool: ...
+
+    def num_int(self) -> bool: ...
+
+    def num_decimal(self) -> bool: ...
+
+    def loop_for(self) -> bool: ...
+
+    def loop_while(self) -> bool: ...
 
     def match_l(self, lexema: str) -> bool:
         if self.token is not None and self.token.lexema == lexema:
