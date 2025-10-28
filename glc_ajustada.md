@@ -5,15 +5,15 @@
 - **bloco_options** -> bloco | e
 - **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar
 - **declarar** -> tipo declarar_options
-- **declarar_options** -> id ';' |atribuicao
-- **cmd_if** -> 'if' '('condicional')' '->' '{' bloco '}' option_else
-- **option_else** -> 'else' '{' bloco'}' | e
-- **condicional** -> expressão operador_relacional expressão condicional' |'!' expressão condicional'
-- **condicional'** -> operador_logico condicional condicional'
-- **expressão** -> exp_prioridade expressão'
-- **expressão'** -> '+' exp_prioridade expressão' | - '-' exp_prioridade expressão' | e
-- **exp_prioridade** -> fator exp_prioridade'
-- **exp_prioridade'** -> '\*' fator exp_prioridade' | '/' fator exp_prioridade' | e
+- **declarar_options** -> id ';' | atribuicao
+- **cmd_if** -> 'if' '(' condicional ')' '->' '{' bloco '}' option_else
+- **option_else** -> 'else' '{' bloco '}' | e
+- **condicional** -> expressão operador_relacional expressão condicional_linha |'!' expressão condicional_linha
+- **condicional_linha** -> operador_logico condicional condicional_linha
+- **expressão** -> exp_prioridade expressão_linha
+- **expressão_linha** -> '+' exp_prioridade expressão_linha | '-' exp_prioridade expressão_linha | e
+- **exp_prioridade** -> fator exp_prioridade_linha
+- **exp_prioridade_linha** -> '\*' fator exp_prioridade_linha | '/' fator exp_prioridade_linha | e
 - **fator** -> id | num | '(' expressão ')'
 - **leitura** -> id '<<' 'input' ';'
 - **escrita** -> 'console' '<<' escrita_options ';'
@@ -29,4 +29,4 @@
 - **num_int** -> [0-9]+
 - **num_decimal** -> [0-9]+.[0-9]+
 - **loop_for** -> 'for' '(' declarar ';' condicional ';' atribuicao ')' '->' '{' bloco '}'
-- **loop_while** -> 'while' '('condicional')' '->' '{' bloco '}'
+- **loop_while** -> 'while' '('condicional ')' '->' '{' bloco '}'
