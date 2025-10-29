@@ -8,7 +8,7 @@
 - **declarar_options** -> id declarar_options_linha ';'
 - **declarar_options_linha** -> '<-' atribuicao_options | e
 - **cmd_if** -> 'if' '(' condicional ')' '->' '{' bloco '}' option_else
-- **option_else** -> 'else' '{' bloco '}' | e
+- **option_else** -> 'else' '->' '{' bloco '}' | e
 - **condicional** -> expressão operador_relacional expressão condicional_linha |'!' expressão condicional_linha
 - **condicional_linha** -> operador_logico condicional condicional_linha
 - **expressão** -> exp_prioridade expressão_linha

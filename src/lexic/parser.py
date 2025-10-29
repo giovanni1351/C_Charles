@@ -45,22 +45,26 @@ class Parser:
 
     @visualizar_exec
     def cmd_if(self) -> bool:
-        return bool(
+        if (
             self.match_l("if")
             and self.match_l("(")
             and self.condicional()
             and self.match_l(")")
             and self.match_l("->")
             and self.match_l("{")
-            and self.expressao()
+            and self.bloco()
             and self.match_l("}")
             and self.option_else()
-        )
+        ):
+            return True
+        self._erro("cmd_if")
+        return False
 
     @visualizar_exec
     def option_else(self) -> bool:
         if (
             self.match_l("else")
+            and self.match_l("->")
             and self.match_l("{")
             and self.bloco()
             and self.match_l("}")
@@ -70,7 +74,43 @@ class Parser:
 
     @visualizar_exec
     def bloco(self) -> bool:
-        return self.cmd() and self.bloco_options()
+        if not self.token:
+            return False
+
+        if (
+            (
+                self.token.lexema
+                in ["console", "if", "int", "float", "boolean", "string"]
+                or self.token.tipo == "ID"
+            )
+            and self.cmd()
+            and self.bloco_options()
+        ):
+            return True
+        self._erro("bloco")
+        return False
+
+    @visualizar_exec
+    def bloco_options(self) -> bool:
+        if not self.token:
+            return False
+        if (
+            self.token.lexema
+            in [
+                "console",
+                "if",
+                "int",
+                "float",
+                "boolean",
+                "string",
+            ]
+            or self.token.tipo == "ID"
+        ) and self.bloco():
+            return True
+        if self.token.lexema == "}":
+            return True
+        self._erro("bloco_options")
+        return False
 
     @visualizar_exec
     def operador_atribuicao(self) -> bool:
@@ -88,44 +128,60 @@ class Parser:
 
     @visualizar_exec
     def num(self) -> bool:
-        if self.match_t("num"):
+        if not self.token:
+            self._erro("num")
+            return False
+        if self.token.tipo == "INTEGER" and self.num_int():
             return True
+
+        if self.token.tipo == "FLOATING" and self.num_decimal():
+            return True
+
         self._erro("num")
         return False
 
     @visualizar_exec
     def programa(self) -> bool:
-        return bool(
-            self.tipo()
-            and self.match_l("charles")
-            and self.match_l("(")
-            and self.match_l(")")
-            and self.match_l("->")
-            and self.match_l("{")
-            and self.bloco()
-            and self.match_l("}")
-        )
-
-    @visualizar_exec
-    def bloco_options(self) -> bool:
-        if self.bloco():
-            return True
-        return True
+        if not self.token:
+            self._erro("programa")
+            return False
+        if self.token.lexema in ["int", "float", "boolean", "string"]:
+            return bool(
+                self.tipo()
+                and self.match_l("charles")
+                and self.match_l("(")
+                and self.match_l(")")
+                and self.match_l("->")
+                and self.match_l("{")
+                and self.bloco()
+                and self.match_l("}")
+            )
+        self._erro("programa")
+        return False
 
     @visualizar_exec
     def cmd(self) -> bool:
-        if self.leitura():
-            return True
-        if self.escrita():
+        if not self.token:
+            return False
+        if self.token.tipo == "ID":
+            print("entrei aqui")
+            self.id()
+            if self.token.lexema == "<-" and self.atribuicao():
+                return True
+            if self.token.lexema == "<<" and self.leitura():
+                return True
+        if self.token.lexema == "console" and self.escrita():
             return True
 
-        if self.declarar():
-            return True
-        if self.atribuicao():
+        if (
+            self.token.lexema in ["int", "float", "boolean", "string"]
+            and self.declarar()
+        ):
             return True
 
-        if self.cmd_if():
+        if self.token.lexema == "if" and self.cmd_if():
             return True
+        self._erro("cmd")
         return False
 
     @visualizar_exec
@@ -137,50 +193,221 @@ class Parser:
         return (self.id() and self.match_l(";")) or self.atribuicao()
 
     @visualizar_exec
-    def condicional(self) -> bool: ...
+    def condicional(self) -> bool:
+        if not self.token:
+            self._erro("condicional")
+            return False
+        if (
+            self.token.tipo == "ID"
+            and self.expressao()
+            and self.operador_relacional()
+            and self.expressao()
+            and self.condicional_linha()
+        ):
+            return True
+        if (
+            self.token.lexema == "!"
+            and self.match_l("!")
+            and self.expressao()
+            and self.condicional_linha()
+        ):
+            return True
+
+        self._erro("condicional")
+        return False
 
     @visualizar_exec
-    def expressao(self) -> bool: ...
+    def condicional_linha(self) -> bool:
+        if not self.token:
+            self._erro("condicional_linha")
+            return False
+
+        if (
+            self.token.tipo == "LOGIC_OP"
+            and self.operador_logico()
+            and self.condicional()
+            and self.condicional_linha()
+        ):
+            return True
+
+        if self.token.lexema in [")", "&&", "||", "!", ";"]:
+            return True
+
+        self._erro("condicional_linha")
+        return False
 
     @visualizar_exec
-    def exp_prioridade(self) -> bool: ...
+    def expressao(self) -> bool:
+        if self.exp_prioridade() and self.expressao_linha():
+            return True
+        self._erro("expressão")
+        return False
 
     @visualizar_exec
-    def fator(self) -> bool: ...
+    def expressao_linha(self) -> bool:
+        if not self.token:
+            return False
+        if (
+            self.token.lexema == "+"
+            and self.match_l("+")
+            and self.exp_prioridade()
+            and self.expressao_linha()
+        ):
+            return True
+        if (
+            self.token.lexema == "-"
+            and self.match_l("-")
+            and self.exp_prioridade()
+            and self.expressao_linha()
+        ):
+            return True
+        if self.token.lexema in [
+            ">",
+            "<",
+            ">=",
+            "<=",
+            "=",
+            "!=",
+            ")",
+            "&&",
+            "||",
+            "!",
+            ";",
+        ]:
+            return True
+
+        self._erro("expressão_linha")
+        return False
+
+    @visualizar_exec
+    def exp_prioridade(self) -> bool:
+        if self.fator() and self.exp_prioridade_linha():
+            return True
+        self._erro("exp_prioridade")
+        return False
+
+    @visualizar_exec
+    def exp_prioridade_linha(self) -> bool:
+        if not self.token:
+            self._erro("exp_prioridade_linha")
+            return False
+        if (
+            self.token.lexema == "*"
+            and self.match_l("*")
+            and self.fator()
+            and self.exp_prioridade_linha()
+        ):
+            return True
+        if (
+            self.token.lexema == r"/"
+            and self.match_l(r"/")
+            and self.fator()
+            and self.exp_prioridade_linha()
+        ):
+            return True
+
+        if self.token.lexema in [
+            "+",
+            "-",
+            ">",
+            "<",
+            ">=",
+            "<=",
+            "=",
+            "!=",
+            ")",
+            "&&",
+            "||",
+            "!",
+            ";",
+        ]:
+            return True
+        self._erro("exp_prioridade_linha")
+        return False
+
+    @visualizar_exec
+    def fator(self) -> bool:
+        if not self.token:
+            self._erro("fator")
+            return False
+        if self.token.tipo == "ID" and self.id():
+            return True
+        if self.token.tipo in ["INTEGER", "FLOATING"] and self.num():
+            return True
+        # if
+        self._erro("fator")
+        return False
 
     @visualizar_exec
     def leitura(self) -> bool:
-        return (
-            self.id()
+        if self.match_l("<<") and self.match_l("input") and self.match_l(";"):
+            return True
+        self._erro("leitura")
+        return False
+
+    @visualizar_exec
+    def escrita(self) -> bool:
+        if not self.token:
+            self._erro("escrita")
+            return False
+
+        if (
+            self.token.lexema == "console"
+            and self.match_l("console")
             and self.match_l("<<")
-            and self.match_l("input")
+            and self.escrita_options()
             and self.match_l(";")
-        )
+        ):
+            return True
+
+        self._erro("escrita")
+        return False
 
     @visualizar_exec
-    def escrita(self) -> bool: ...
+    def escrita_options(self) -> bool:
+        if not self.token:
+            self._erro("escrita_options")
+            return False
 
-    @visualizar_exec
-    def escrita_options(self) -> bool: ...
+        if self.token.tipo == "ID" and self.id():
+            return True
+
+        if self.token.tipo == "STRING" and self.texto_string():
+            return True
+
+        self._erro("escrita_options")
+        return False
 
     @visualizar_exec
     def atribuicao(self) -> bool:
-        return (
-            self.id()
-            and self.match_l("<-")
-            and self.atribuicao_options()
-            and self.match_l(";")
-        )
+        if self.match_l("<-") and self.atribuicao_options() and self.match_l(";"):
+            return True
+        self._erro("atribuicao")
+        return False
 
     @visualizar_exec
     def atribuicao_options(self) -> bool:
-        return self.expressao() or self.texto_string()
+        if self.expressao() or self.texto_string():
+            return True
+        self._erro("atribuicao_options")
+        return False
 
     @visualizar_exec
-    def texto_string(self) -> bool: ...
+    def texto_string(self) -> bool:
+        if self.match_t("STRING"):
+            return True
+        self._erro("texto_string")
+        return False
 
     @visualizar_exec
-    def operador_relacional(self) -> bool: ...
+    def operador_relacional(self) -> bool:
+        if not self.token:
+            self._erro("operador_relacional")
+            return False
+        if self.token.tipo == "RELACIONAL_OP":
+            return self.match_t("RELACIONAL_OP")
+        self._erro("operador_relacional")
+        return False
 
     @visualizar_exec
     def tipo(self) -> bool:
@@ -192,13 +419,29 @@ class Parser:
         )
 
     @visualizar_exec
-    def operador_logico(self) -> bool: ...
+    def operador_logico(self) -> bool:
+        if not self.token:
+            self._erro("operador_logico")
+            return False
+        if self.token.tipo == "LOGIC_OP" and self.match_t("LOGIC_OP"):
+            return True
+
+        self._erro("operador_logico")
+        return False
 
     @visualizar_exec
-    def num_int(self) -> bool: ...
+    def num_int(self) -> bool:
+        if self.match_t("INTEGER"):
+            return True
+        self._erro("num_int")
+        return False
 
     @visualizar_exec
-    def num_decimal(self) -> bool: ...
+    def num_decimal(self) -> bool:
+        if self.match_t("FLOATING"):
+            return True
+        self._erro("num_decimal")
+        return False
 
     @visualizar_exec
     def loop_for(self) -> bool: ...
@@ -207,7 +450,7 @@ class Parser:
     def loop_while(self) -> bool: ...
 
     def match_l(self, lexema: str) -> bool:
-        print(f"{lexema= }")
+        # print(f"{lexema= }")
         if self.token is not None and self.token.lexema == lexema:
             self.token = self.get_next_token()
             return True

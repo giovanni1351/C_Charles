@@ -9,7 +9,8 @@ class BracketsOperator(AFD):
     @override
     def evaluate(self, code: CharacterIterator) -> Token | None:
         atual: str | None = code.current()
-
+        if atual is None:
+            return Token("EOF", "$")
         match atual:
             case "(":
                 next(code)

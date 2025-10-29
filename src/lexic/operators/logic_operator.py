@@ -15,18 +15,21 @@ class LogicOperator(AFD):
                 next(code)
                 if code.current() == "=":
                     next(code)
-                    return Token("LOGIC_OP", "<=")
+                    return Token("RELACIONAL_OP", "<=")
                 if code.current() == "<":
                     next(code)
                     return Token("OUTPUT", "<<")
-                return Token("LOGIC_OP", "<")
+                if code.current() == "-":
+                    next(code)
+                    return Token("ATRIBUICAO", "<-")
+                return Token("RELACIONAL_OP", "<")
 
             case ">":
                 next(code)
                 if code.current() == "=":
                     next(code)
-                    return Token("LOGIC_OP", ">=")
-                return Token("LOGIC_OP", ">")
+                    return Token("RELACIONAL_OP", ">=")
+                return Token("RELACIONAL_OP", ">")
 
             case "&":
                 next(code)
@@ -37,9 +40,12 @@ class LogicOperator(AFD):
 
             case "=":
                 next(code)
-                return Token("LOGIC_OP", "=")
+                return Token("RELACIONAL_OP", "=")
             case "!":
                 next(code)
+                if code.current() == "=":
+                    next(code)
+                    return Token("RELACIONAL_OP", "!=")
                 return Token("LOGIC_OP", "!")
 
             case None:
