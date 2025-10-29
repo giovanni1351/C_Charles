@@ -1,9 +1,9 @@
 # Gramática livre de contexto
 
-- **programa** -> tipo 'charles()' '->' '{' bloco '}'
+- **programa** -> tipo 'charles' '()' '->' '{' bloco '}'
 - **bloco** -> cmd bloco_options
 - **bloco_options** -> bloco | e
-- **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar
+- **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar | loop_for | loop_while
 - **declarar** -> tipo declarar_options
 - **declarar_options** -> id declarar_options_linha ';'
 - **declarar_options_linha** -> '<-' atribuicao_options | e
