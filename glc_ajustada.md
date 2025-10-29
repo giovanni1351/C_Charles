@@ -5,7 +5,8 @@
 - **bloco_options** -> bloco | e
 - **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar
 - **declarar** -> tipo declarar_options
-- **declarar_options** -> id ';' | atribuicao
+- **declarar_options** -> id declarar_options_linha ';'
+- **declarar_options_linha** -> '<-' atribuicao_options | e
 - **cmd_if** -> 'if' '(' condicional ')' '->' '{' bloco '}' option_else
 - **option_else** -> 'else' '{' bloco '}' | e
 - **condicional** -> expressão operador_relacional expressão condicional_linha |'!' expressão condicional_linha
