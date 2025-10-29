@@ -26,7 +26,7 @@ class Parser:
 
     def main(self) -> None:
         self.token = self.get_next_token()
-        if self.programa() and self.match_t("EOF"):
+        if self.programa() and (self.token is None or self.match_t("EOF")):
             print("Sintaticamente correto")
         else:
             self._erro("main")
@@ -411,12 +411,19 @@ class Parser:
 
     @visualizar_exec
     def tipo(self) -> bool:
-        return (
-            self.match_l("int")
-            or self.match_l("float")
-            or self.match_l("boolean")
-            or self.match_l("string")
-        )
+        if not self.token:
+            self._erro("tipo")
+            return False
+        if self.token.lexema == "int" and self.match_l("int"):
+            return True
+        if self.token.lexema == "float" and self.match_l("float"):
+            return True
+        if self.token.lexema == "boolean" and self.match_l("boolean"):
+            return True
+        if self.token.lexema == "string" and self.match_l("string"):
+            return True
+        self._erro("tipo")
+        return False
 
     @visualizar_exec
     def operador_logico(self) -> bool:
@@ -457,7 +464,10 @@ class Parser:
         return False
 
     def match_t(self, tipo: str) -> bool:
-        if self.token is not None and self.token.tipo == tipo:
+        if not self.token:
+            self._erro("match_t")
+            return False
+        if self.token.tipo == tipo:
             self.token = self.get_next_token()
             return True
         return False
