@@ -36,12 +36,17 @@ class Parser:
             return self.tokens.pop(0)
         return None
 
-    def _erro(self, regra: str) -> None:
+    def _erro(
+        self, regra: str, message: str | None = None, exit_program: bool = True
+    ) -> None:
         print(f"Erro na regra {regra= }")
         print("Regra", regra)
+        if message:
+            print(f"{message= }")
         print("Token invalido", self.token)
         print("----" * 10)
-        exit()
+        if exit_program:
+            exit()
 
     @visualizar_exec
     def cmd_if(self) -> bool:
@@ -62,8 +67,13 @@ class Parser:
 
     @visualizar_exec
     def option_else(self) -> bool:
+        if not self.token:
+            self._erro("option_else", "token nulo")
+            return False
+
         if (
-            self.match_l("else")
+            self.token.lexema == "else"
+            and self.match_l("else")
             and self.match_l("->")
             and self.match_l("{")
             and self.bloco()
@@ -75,12 +85,22 @@ class Parser:
     @visualizar_exec
     def bloco(self) -> bool:
         if not self.token:
+            self._erro("bloco", "token nulo")
             return False
 
         if (
             (
                 self.token.lexema
-                in ["console", "if", "int", "float", "boolean", "string"]
+                in [
+                    "console",
+                    "if",
+                    "int",
+                    "float",
+                    "boolean",
+                    "string",
+                    "for",
+                    "while",
+                ]
                 or self.token.tipo == "ID"
             )
             and self.cmd()
@@ -93,6 +113,7 @@ class Parser:
     @visualizar_exec
     def bloco_options(self) -> bool:
         if not self.token:
+            self._erro("bloco_options", "token nulo")
             return False
         if (
             self.token.lexema
@@ -103,6 +124,8 @@ class Parser:
                 "float",
                 "boolean",
                 "string",
+                "for",
+                "while",
             ]
             or self.token.tipo == "ID"
         ) and self.bloco():
@@ -129,7 +152,7 @@ class Parser:
     @visualizar_exec
     def num(self) -> bool:
         if not self.token:
-            self._erro("num")
+            self._erro("num", "token nulo")
             return False
         if self.token.tipo == "INTEGER" and self.num_int():
             return True
@@ -143,7 +166,7 @@ class Parser:
     @visualizar_exec
     def programa(self) -> bool:
         if not self.token:
-            self._erro("programa")
+            self._erro("programa", "token nulo")
             return False
         if self.token.lexema in ["int", "float", "boolean", "string"]:
             return bool(
@@ -162,6 +185,7 @@ class Parser:
     @visualizar_exec
     def cmd(self) -> bool:
         if not self.token:
+            self._erro("cmd", "token nulo")
             return False
         if self.token.tipo == "ID":
             print("entrei aqui")
@@ -181,21 +205,52 @@ class Parser:
 
         if self.token.lexema == "if" and self.cmd_if():
             return True
+
+        if self.token.lexema == "for" and self.loop_for():
+            print("entrou aqui")
+            return True
+        if self.token.lexema == "while" and self.loop_while():
+            return True
         self._erro("cmd")
         return False
 
     @visualizar_exec
     def declarar(self) -> bool:
-        return self.tipo() and self.declarar_options()
+        if self.tipo() and self.declarar_options():
+            return True
+        self._erro("declarar", "regra não correta")
+        return False
 
     @visualizar_exec
     def declarar_options(self) -> bool:
-        return (self.id() and self.match_l(";")) or self.atribuicao()
+        if self.id() and self.declarar_options_linha() and self.match_l(";"):
+            return True
+        self._erro("declarar_options", "Regra incorreta, verifique a declaração")
+        return False
+
+    @visualizar_exec
+    def declarar_options_linha(self) -> bool:
+        if not self.token:
+            self._erro("declarar_options_linha")
+            return False
+
+        if (
+            self.token.lexema == "<-"
+            and self.match_l("<-")
+            and self.atribuicao_options()
+        ):
+            return True
+
+        if self.token.lexema in [";"]:
+            return True
+
+        self._erro("declarar_options_linha")
+        return False
 
     @visualizar_exec
     def condicional(self) -> bool:
         if not self.token:
-            self._erro("condicional")
+            self._erro("condicional", "token nulo")
             return False
         if (
             self.token.tipo == "ID"
@@ -219,7 +274,7 @@ class Parser:
     @visualizar_exec
     def condicional_linha(self) -> bool:
         if not self.token:
-            self._erro("condicional_linha")
+            self._erro("condicional_linha", "token nulo")
             return False
 
         if (
@@ -246,6 +301,7 @@ class Parser:
     @visualizar_exec
     def expressao_linha(self) -> bool:
         if not self.token:
+            self._erro("expressao_linha", "token nulo")
             return False
         if (
             self.token.lexema == "+"
@@ -289,7 +345,7 @@ class Parser:
     @visualizar_exec
     def exp_prioridade_linha(self) -> bool:
         if not self.token:
-            self._erro("exp_prioridade_linha")
+            self._erro("exp_prioridade_linha", "token nulo")
             return False
         if (
             self.token.lexema == "*"
@@ -328,7 +384,7 @@ class Parser:
     @visualizar_exec
     def fator(self) -> bool:
         if not self.token:
-            self._erro("fator")
+            self._erro("fator", "token nulo")
             return False
         if self.token.tipo == "ID" and self.id():
             return True
@@ -348,7 +404,7 @@ class Parser:
     @visualizar_exec
     def escrita(self) -> bool:
         if not self.token:
-            self._erro("escrita")
+            self._erro("escrita", "token nulo")
             return False
 
         if (
@@ -366,7 +422,7 @@ class Parser:
     @visualizar_exec
     def escrita_options(self) -> bool:
         if not self.token:
-            self._erro("escrita_options")
+            self._erro("escrita_options", "token nulo")
             return False
 
         if self.token.tipo == "ID" and self.id():
@@ -380,14 +436,27 @@ class Parser:
 
     @visualizar_exec
     def atribuicao(self) -> bool:
-        if self.match_l("<-") and self.atribuicao_options() and self.match_l(";"):
+        if (
+            self.id()
+            and self.match_l("<-")
+            and self.atribuicao_options()
+            and self.match_l(";")
+        ):
             return True
         self._erro("atribuicao")
         return False
 
     @visualizar_exec
     def atribuicao_options(self) -> bool:
-        if self.expressao() or self.texto_string():
+        if not self.token:
+            self._erro("atribuicao_options")
+            return False
+
+        if (
+            self.token.tipo in ["ID", "INTEGER", "FLOATING"] or self.token.lexema == "("
+        ) and self.expressao():
+            return True
+        if self.token.tipo == "STRING" and self.texto_string():
             return True
         self._erro("atribuicao_options")
         return False
@@ -402,7 +471,7 @@ class Parser:
     @visualizar_exec
     def operador_relacional(self) -> bool:
         if not self.token:
-            self._erro("operador_relacional")
+            self._erro("operador_relacional", "token nulo")
             return False
         if self.token.tipo == "RELACIONAL_OP":
             return self.match_t("RELACIONAL_OP")
@@ -412,7 +481,7 @@ class Parser:
     @visualizar_exec
     def tipo(self) -> bool:
         if not self.token:
-            self._erro("tipo")
+            self._erro("tipo", "token nulo")
             return False
         if self.token.lexema == "int" and self.match_l("int"):
             return True
@@ -428,7 +497,7 @@ class Parser:
     @visualizar_exec
     def operador_logico(self) -> bool:
         if not self.token:
-            self._erro("operador_logico")
+            self._erro("operador_logico", "token nulo")
             return False
         if self.token.tipo == "LOGIC_OP" and self.match_t("LOGIC_OP"):
             return True
@@ -451,23 +520,64 @@ class Parser:
         return False
 
     @visualizar_exec
-    def loop_for(self) -> bool: ...
+    def loop_for(self) -> bool:
+        if not self.token:
+            self._erro("loop_for", "token nulo")
+            return False
+        if (
+            self.match_l("for")
+            and self.match_l("(")
+            and self.declarar()
+            # and self.match_l(";")
+            and self.condicional()
+            and self.match_l(";")
+            and self.atribuicao()
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
+            and self.bloco()
+            and self.match_l("}")
+        ):
+            return True
+        self._erro("loop_for", "Regra não correta")
+        return False
 
     @visualizar_exec
-    def loop_while(self) -> bool: ...
+    def loop_while(self) -> bool:
+        if not self.token:
+            self._erro("loop_while", "token nulo")
+            return False
+        if (
+            self.match_l("while")
+            and self.match_l("(")
+            and self.condicional()
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
+            and self.bloco()
+            and self.match_l("}")
+        ):
+            return True
+        self._erro("loop_while")
+        return False
 
     def match_l(self, lexema: str) -> bool:
-        # print(f"{lexema= }")
         if self.token is not None and self.token.lexema == lexema:
             self.token = self.get_next_token()
             return True
+        self._erro(
+            "Token invalido",
+            f"Esperado {lexema = } e encontrado {self.token} incorreto para a regra",
+            False,
+        )
         return False
 
     def match_t(self, tipo: str) -> bool:
         if not self.token:
-            self._erro("match_t")
+            self._erro("match_t", "token nulo")
             return False
         if self.token.tipo == tipo:
             self.token = self.get_next_token()
             return True
+        self._erro("Tipo invalido", f"{tipo = } incorreto para a regra", False)
         return False

@@ -7,7 +7,7 @@ from utils.character_iterator import CharacterIterator
 
 class LogicOperator(AFD):
     @override
-    def evaluate(self, code: CharacterIterator) -> Token | None:
+    def evaluate(self, code: CharacterIterator) -> Token | None:  # noqa: C901
         atual: str | None = code.current()
 
         match atual:

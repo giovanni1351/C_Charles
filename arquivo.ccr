@@ -2,6 +2,7 @@ int charles() -> {
 
 
   int variavel;
+  int a <- 3;
   variavel << input;
   boolean estaNoIntervalo;
   if ( variavel > 10 && variavel < 30 ) -> {
@@ -34,7 +35,14 @@ int charles() -> {
   if(variavel = 30) -> {
     console<<" A 8===D variavel é exatamente 30";
   }
-
+  for(int x <- 0; x < 10 ; x <- 5 ) -> {
+    console<<x;;
+  }
+  int y;
+  while(y<10) -> {
+    y <- y+1;
+    console<<y;
+  }
 
 
 }
