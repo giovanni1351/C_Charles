@@ -35,12 +35,12 @@ class Node:
             return node_novo
         return None
 
-    def get_tree(self) -> list[str]:
+    def get_tree(self) -> str:
         print("AST")
         buffer: list[str] = []
         self.printar(buffer, "", "")
 
-        return buffer
+        return "".join(buffer)
 
     def printar(self, buffer: list[str], prefix: str, children_prefix: str) -> None:
         buffer.append(prefix)
@@ -60,4 +60,4 @@ if __name__ == "__main__":
         )
         for node_filho in nodes_filhos:
             node.add_node(new_node=node_filho)
-    print("".join(node_pai.get_tree()))
+    print(node_pai.get_tree())
