@@ -3,7 +3,7 @@
 - **programa** -> tipo 'charles' '()' '->' '{' bloco '}'
 - **bloco** -> cmd bloco_options
 - **bloco_options** -> bloco | e
-- **cmd** -> leitura | escrita | atribuicao | cmd_if | declarar | loop_for | loop_while
+- **cmd** -> leitura ';' | escrita ';' | atribuicao ';' | cmd_if | declarar;| loop_for | loop_while
 - **declarar** -> tipo declarar_options
 - **declarar_options** -> id declarar_options_linha ';'
 - **declarar_options_linha** -> '<-' atribuicao_options | e
@@ -16,10 +16,10 @@
 - **exp_prioridade** -> fator exp_prioridade_linha
 - **exp_prioridade_linha** -> '\*' fator exp_prioridade_linha | '/' fator exp_prioridade_linha | e
 - **fator** -> id | num | '(' expressão ')'
-- **leitura** -> id '<<' 'input' ';'
-- **escrita** -> 'console' '<<' escrita_options ';'
+- **leitura** -> id '<<' 'input'
+- **escrita** -> 'console' '<<' escrita_options
 - **escrita_options** -> id | texto_string
-- **atribuicao** -> id '<-' atribuicao_options ';'
+- **atribuicao** -> id '<-' atribuicao_options
 - **atribuicao_options** -> expressão | texto_string
 - **texto_string** -> '"'[a-zA-Z 0-9]'"'
 - **num** -> num_int | num_decimal

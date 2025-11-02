@@ -38,7 +38,5 @@ class BracketsOperator(AFD):
                     next(code)
                     return Token("START_BLOCK", "->")
                 return Token("LOGIC_OP", "=")
-            case None:
-                return Token("EOF", "$")
             case _:
                 return None

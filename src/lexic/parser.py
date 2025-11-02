@@ -37,10 +37,13 @@ class Parser:
         return None
 
     def _erro(
-        self, regra: str, message: str | None = None, exit_program: bool = True
+        self,
+        regra: str,
+        message: str | None = None,
+        *,
+        exit_program: bool = True,
     ) -> None:
-        print(f"Erro na regra {regra= }")
-        print("Regra", regra)
+        print(f"Erro na {regra = }")
         if message:
             print(f"{message= }")
         print("Token invalido", self.token)
@@ -136,13 +139,6 @@ class Parser:
         return False
 
     @visualizar_exec
-    def operador_atribuicao(self) -> bool:
-        if self.match_t("operador_atribuicao"):
-            return True
-        self._erro("Operador atribuicao")
-        return False
-
-    @visualizar_exec
     def id(self) -> bool:
         if self.match_t("ID"):
             return True
@@ -190,16 +186,17 @@ class Parser:
         if self.token.tipo == "ID":
             print("entrei aqui")
             self.id()
-            if self.token.lexema == "<-" and self.atribuicao():
+            if self.token.lexema == "<-" and self.atribuicao() and self.match_l(";"):
                 return True
-            if self.token.lexema == "<<" and self.leitura():
+            if self.token.lexema == "<<" and self.leitura() and self.match_l(";"):
                 return True
-        if self.token.lexema == "console" and self.escrita():
+        if self.token.lexema == "console" and self.escrita() and self.match_l(";"):
             return True
 
         if (
             self.token.lexema in ["int", "float", "boolean", "string"]
             and self.declarar()
+            and self.match_l(";")
         ):
             return True
 
@@ -223,7 +220,7 @@ class Parser:
 
     @visualizar_exec
     def declarar_options(self) -> bool:
-        if self.id() and self.declarar_options_linha() and self.match_l(";"):
+        if self.id() and self.declarar_options_linha():
             return True
         self._erro("declarar_options", "Regra incorreta, verifique a declaração")
         return False
@@ -396,7 +393,7 @@ class Parser:
 
     @visualizar_exec
     def leitura(self) -> bool:
-        if self.match_l("<<") and self.match_l("input") and self.match_l(";"):
+        if self.match_l("<<") and self.match_l("input"):
             return True
         self._erro("leitura")
         return False
@@ -412,7 +409,6 @@ class Parser:
             and self.match_l("console")
             and self.match_l("<<")
             and self.escrita_options()
-            and self.match_l(";")
         ):
             return True
 
@@ -436,12 +432,7 @@ class Parser:
 
     @visualizar_exec
     def atribuicao(self) -> bool:
-        if (
-            self.id()
-            and self.match_l("<-")
-            and self.atribuicao_options()
-            and self.match_l(";")
-        ):
+        if self.match_l("<-") and self.atribuicao_options():
             return True
         self._erro("atribuicao")
         return False
@@ -528,9 +519,10 @@ class Parser:
             self.match_l("for")
             and self.match_l("(")
             and self.declarar()
-            # and self.match_l(";")
+            and self.match_l(";")
             and self.condicional()
             and self.match_l(";")
+            and self.id()
             and self.atribuicao()
             and self.match_l(")")
             and self.match_l("->")
@@ -568,7 +560,7 @@ class Parser:
         self._erro(
             "Token invalido",
             f"Esperado {lexema = } e encontrado {self.token} incorreto para a regra",
-            False,
+            exit_program=False,
         )
         return False
 
@@ -579,5 +571,7 @@ class Parser:
         if self.token.tipo == tipo:
             self.token = self.get_next_token()
             return True
-        self._erro("Tipo invalido", f"{tipo = } incorreto para a regra", False)
+        self._erro(
+            "Tipo invalido", f"{tipo = } incorreto para a regra", exit_program=False
+        )
         return False

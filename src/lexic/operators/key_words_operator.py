@@ -19,6 +19,8 @@ class KeyWordOperator(AFD):
         "input",
         "boolean",
         "console",
+        "true",
+        "false",
     ]
 
     @override
