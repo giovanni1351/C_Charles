@@ -1,0 +1,32 @@
+int charles() -> {
+
+  int variavel;
+  int variavel <- 2;
+  string variavel <- "teste";
+  string variavel;
+  boolean variavel;
+  boolean variavel <- 10;
+  boolean variavel;
+  float variavel;
+  float teste <- 10.9;
+  int a <- 3;
+  variavel << input;
+  boolean estaNoIntervalo;
+  if ( variavel > 10 && variavel < 30 ) -> {
+    a <- "true";
+  }
+  for(int x <- 0;x<10;x<-x+1)->{
+    int valor <- 30;
+  }
+  if (!estaNoIntervalo) -> {
+    console << " Não está no intervalo " ;
+  }
+  if(variavel = 30) -> {
+    console<<" A 8===D variavel é exatamente 30";
+  }
+ 
+ 
+
+
+}
+
