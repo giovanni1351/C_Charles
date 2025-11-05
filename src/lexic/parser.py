@@ -25,6 +25,7 @@ class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
         self.token: Token | None
+        self.id_hash_table = {}
 
     def main(self) -> Tree:
         self.token = self.get_next_token()
