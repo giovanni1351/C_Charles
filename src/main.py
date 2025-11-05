@@ -29,7 +29,10 @@ class Main:
             for token in tokens:
                 print(token)
             parser = Parser(tokens)
-            parser.main().print_tree()
+            arvore = parser.main()
+            arvore.print_tree()
+            arvore.print_code()
+            print(parser.id_hash_table)
 
 
 if __name__ == "__main__":

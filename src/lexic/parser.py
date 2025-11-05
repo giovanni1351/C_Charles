@@ -25,7 +25,7 @@ class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
         self.token: Token | None
-        self.id_hash_table = {}
+        self.id_hash_table: dict[str, int] = {}
 
     def main(self) -> Tree:
         self.token = self.get_next_token()
@@ -78,10 +78,12 @@ class Parser:
 
     @visualizar_exec
     def option_else(self, node: Node) -> bool:
-        node_option_else = node.add_node(node_name="option_else")
         if not self.token:
             self._erro("option_else", "token nulo")
             return False
+        node_option_else = node
+        if self.token.lexema == "else":
+            node_option_else = node.add_node(node_name="option_else")
 
         if (
             self.token.lexema == "else"
@@ -96,7 +98,10 @@ class Parser:
 
     @visualizar_exec
     def bloco(self, node: Node) -> bool:
-        node_bloco = node.add_node(node_name="bloco")
+        if node.nome != "bloco":
+            node_bloco = node.add_node(node_name="bloco", enter="begin\n", exit_="end")
+        else:
+            node_bloco = node
         if not self.token:
             self._erro("bloco", "token nulo")
             return False
@@ -125,7 +130,7 @@ class Parser:
 
     @visualizar_exec
     def bloco_options(self, node: Node) -> bool:
-        node_bloco_options = node.add_node(node_name="bloco_options")
+        # node_bloco_options = node.add_node(node_name="bloco_options")
         if not self.token:
             self._erro("bloco_options", "token nulo")
             return False
@@ -142,7 +147,7 @@ class Parser:
                 "while",
             ]
             or self.token.tipo == "ID"
-        ) and self.bloco(node_bloco_options):
+        ) and self.bloco(node):
             return True
         if self.token.lexema == "}":
             return True
@@ -152,7 +157,12 @@ class Parser:
     @visualizar_exec
     def id(self, node: Node) -> bool:
         node_id = node.add_node(node_name="id")
+        if not self.token:
+            self._erro("id")
+            return False
+        lexema = self.token.lexema
         if self.match_t("ID", node_id):
+            self.id_hash_table[lexema] = 0
             return True
         self._erro("id")
         return False
@@ -248,25 +258,23 @@ class Parser:
 
     @visualizar_exec
     def declarar_options(self, node: Node) -> bool:
-        node_declarar_options = node.add_node(node_name="declarar_options")
-        if self.id(node_declarar_options) and self.declarar_options_linha(
-            node_declarar_options
-        ):
+        # node_declarar_options = node.add_node(node_name="declarar_options")
+        if self.id(node) and self.declarar_options_linha(node):
             return True
         self._erro("declarar_options", "Regra incorreta, verifique a declaração")
         return False
 
     @visualizar_exec
     def declarar_options_linha(self, node: Node) -> bool:
-        node_declarar_options_linha = node.add_node(node_name="declarar_options_linha")
+        # node_declarar_options_linha = node.add_node(node_name="declarar_options_linha")
         if not self.token:
             self._erro("declarar_options_linha")
             return False
 
         if (
             self.token.lexema == "<-"
-            and self.match_l("<-", node=node_declarar_options_linha)
-            and self.atribuicao_options(node=node_declarar_options_linha)
+            and self.match_l("<-", node=node)
+            and self.atribuicao_options(node=node)
         ):
             return True
 
@@ -303,16 +311,16 @@ class Parser:
 
     @visualizar_exec
     def condicional_linha(self, node: Node) -> bool:
-        node_condicional_linha = node.add_node(node_name="condicional_linha")
+        # node_condicional_linha = node.add_node(node_name="condicional_linha")
         if not self.token:
             self._erro("condicional_linha", "token nulo")
             return False
 
         if (
             self.token.tipo == "LOGIC_OP"
-            and self.operador_logico(node_condicional_linha)
-            and self.condicional(node_condicional_linha)
-            and self.condicional_linha(node_condicional_linha)
+            and self.operador_logico(node)
+            and self.condicional(node)
+            and self.condicional_linha(node)
         ):
             return True
 
@@ -332,22 +340,22 @@ class Parser:
 
     @visualizar_exec
     def expressao_linha(self, node: Node) -> bool:
-        node_expressao_linha = node.add_node(node_name="expressao_linha")
+        # node_expressao_linha = node.add_node(node_name="expressao_linha")
         if not self.token:
             self._erro("expressao_linha", "token nulo")
             return False
         if (
             self.token.lexema == "+"
-            and self.match_l("+", node=node_expressao_linha)
-            and self.exp_prioridade(node_expressao_linha)
-            and self.expressao_linha(node_expressao_linha)
+            and self.match_l("+", node=node)
+            and self.exp_prioridade(node)
+            and self.expressao_linha(node)
         ):
             return True
         if (
             self.token.lexema == "-"
-            and self.match_l("-", node=node_expressao_linha)
-            and self.exp_prioridade(node_expressao_linha)
-            and self.expressao_linha(node_expressao_linha)
+            and self.match_l("-", node=node)
+            and self.exp_prioridade(node)
+            and self.expressao_linha(node)
         ):
             return True
         if self.token.lexema in [
@@ -380,15 +388,15 @@ class Parser:
 
     @visualizar_exec
     def exp_prioridade_linha(self, node: Node) -> bool:
-        node_exp_prioridade_linha = node.add_node(node_name="exp_prioridade_linha")
+        # node_exp_prioridade_linha = node.add_node(node_name="exp_prioridade_linha")
         if not self.token:
             self._erro("exp_prioridade_linha", "token nulo")
             return False
         if (
             self.token.lexema == "*"
-            and self.match_l("*", node=node_exp_prioridade_linha)
-            and self.fator(node_exp_prioridade_linha)
-            and self.exp_prioridade_linha(node_exp_prioridade_linha)
+            and self.match_l("*", node=node)
+            and self.fator(node)
+            and self.exp_prioridade_linha(node)
         ):
             return True
         if (
@@ -462,15 +470,15 @@ class Parser:
 
     @visualizar_exec
     def escrita_options(self, node: Node) -> bool:
-        node_escrita_options = node.add_node(node_name="escrita_options")
+        # node_escrita_options = node.add_node(node_name="escrita_options")
         if not self.token:
             self._erro("escrita_options", "token nulo")
             return False
 
-        if self.token.tipo == "ID" and self.id(node_escrita_options):
+        if self.token.tipo == "ID" and self.id(node):
             return True
 
-        if self.token.tipo == "STRING" and self.texto_string(node_escrita_options):
+        if self.token.tipo == "STRING" and self.texto_string(node):
             return True
 
         self._erro("escrita_options")
@@ -488,16 +496,16 @@ class Parser:
 
     @visualizar_exec
     def atribuicao_options(self, node: Node) -> bool:
-        node_atribuicao_options = node.add_node(node_name="atribuicao_options")
+        # node_atribuicao_options = node.add_node(node_name="atribuicao_options")
         if not self.token:
             self._erro("atribuicao_options")
             return False
 
         if (
             self.token.tipo in ["ID", "INTEGER", "FLOATING"] or self.token.lexema == "("
-        ) and self.expressao(node_atribuicao_options):
+        ) and self.expressao(node):
             return True
-        if self.token.tipo == "STRING" and self.texto_string(node_atribuicao_options):
+        if self.token.tipo == "STRING" and self.texto_string(node):
             return True
         self._erro("atribuicao_options")
         return False
@@ -619,7 +627,7 @@ class Parser:
     def match_l(self, lexema: str, *, node: Node | None = None) -> bool:
         if self.token is not None and self.token.lexema == lexema:
             if node is not None:
-                node.add_node(node_name=self.token.lexema)
+                node.add_node(node_name=self.token.lexema, token=self.token)
             self.token = self.get_next_token()
             return True
         self._erro(
@@ -635,7 +643,7 @@ class Parser:
             return False
         if self.token.tipo == tipo:
             if node is not None:
-                node.add_node(node_name=self.token.lexema)
+                node.add_node(node_name=self.token.lexema, token=self.token)
             self.token = self.get_next_token()
             return True
         self._erro(

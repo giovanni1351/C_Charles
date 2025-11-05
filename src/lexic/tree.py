@@ -21,13 +21,13 @@ class Tree:
             self.print_code(self.root)
             print()
             return
-        print(node.enter)
+        print(node.enter, end="")
         if len(node.nodes) == 0:
-            print(node)
+            print(node.nome, end=" ")
 
         for n in node.nodes:
             self.print_code(n)
-        print(node.exit)
+        print(node.exit, end="")
 
     def print_tree(self) -> None:
         print(self.root.get_tree())
