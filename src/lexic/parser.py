@@ -13,7 +13,8 @@ def visualizar_exec[**P, R](func: Callable[P, R]) -> Callable[P, R]:
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         retorno = func(*args, **kwargs)
         if retorno:
-            print(f"Sucesso {func.__name__}")
+            # print(f"Sucesso {func.__name__}")
+            ...
         else:
             print(f"F total {func.__name__}")
         return retorno
@@ -26,6 +27,7 @@ class Parser:
         self.tokens = tokens
         self.token: Token | None
         self.id_hash_table: dict[str, int] = {}
+        self.declaracoes: list[Node] = list[Node]()
 
     def main(self) -> Tree:
         self.token = self.get_next_token()
@@ -63,13 +65,13 @@ class Parser:
         node_cmd_if = node.add_node(node_name="cmd_if")
         if (
             self.match_l("if", node=node_cmd_if)
-            and self.match_l("(", node=node_cmd_if)
+            and self.match_l("(")
             and self.condicional(node=node_cmd_if)
-            and self.match_l(")", node=node_cmd_if)
-            and self.match_l("->", node=node_cmd_if)
-            and self.match_l("{", node=node_cmd_if)
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
             and self.bloco(node=node_cmd_if)
-            and self.match_l("}", node=node_cmd_if)
+            and self.match_l("}")
             and self.option_else(node=node_cmd_if)
         ):
             return True
@@ -88,10 +90,10 @@ class Parser:
         if (
             self.token.lexema == "else"
             and self.match_l("else", node=node_option_else)
-            and self.match_l("->", node=node_option_else)
-            and self.match_l("{", node=node_option_else)
-            and self.bloco(node=node_option_else)
-            and self.match_l("}", node=node_option_else)
+            and self.match_l("->")
+            and self.match_l("{")
+            and self.bloco(node_option_else)
+            and self.match_l("}")
         ):
             return True
         return True
@@ -99,7 +101,9 @@ class Parser:
     @visualizar_exec
     def bloco(self, node: Node) -> bool:
         if node.nome != "bloco":
-            node_bloco = node.add_node(node_name="bloco", enter="begin\n", exit_="end")
+            node_bloco = node.add_node(
+                node_name="bloco", enter="\nbegin\n", exit_="\nend\n"
+            )
         else:
             node_bloco = node
         if not self.token:
@@ -162,7 +166,10 @@ class Parser:
             return False
         lexema = self.token.lexema
         if self.match_t("ID", node_id):
-            self.id_hash_table[lexema] = 0
+            if self.id_hash_table.get(lexema, None) is not None:
+                self.id_hash_table[lexema] += 1
+            else:
+                self.id_hash_table[lexema] = 1
             return True
         self._erro("id")
         return False
@@ -191,13 +198,13 @@ class Parser:
         if self.token.lexema in ["int", "float", "boolean", "string"]:
             return bool(
                 self.tipo(node=node_programa)  # pyright: ignore[reportUnknownArgumentType]
-                and self.match_l("charles", node=node_programa)
-                and self.match_l("(", node=node_programa)
-                and self.match_l(")", node=node_programa)
-                and self.match_l("->", node=node_programa)
-                and self.match_l("{", node=node_programa)
+                and self.match_l("charles")
+                and self.match_l("(")
+                and self.match_l(")")
+                and self.match_l("->")
+                and self.match_l("{")
                 and self.bloco(node=node_programa)
-                and self.match_l("}", node=node_programa)
+                and self.match_l("}")
             )
         self._erro("programa")
         return False
@@ -209,31 +216,30 @@ class Parser:
             self._erro("cmd", "token nulo")
             return False
         if self.token.tipo == "ID":
-            print("entrei aqui")
             self.id(node_cmd)
             if (
                 self.token.lexema == "<-"
                 and self.atribuicao(node_cmd)
-                and self.match_l(";", node=node_cmd)
+                and self.match_l(";")
             ):
                 return True
             if (
                 self.token.lexema == "<<"
                 and self.leitura(node_cmd)
-                and self.match_l(";", node=node_cmd)
+                and self.match_l(";")
             ):
                 return True
         if (
             self.token.lexema == "console"
             and self.escrita(node_cmd)
-            and self.match_l(";", node=node_cmd)
+            and self.match_l(";")
         ):
             return True
 
         if (
             self.token.lexema in ["int", "float", "boolean", "string"]
             and self.declarar(node_cmd)
-            and self.match_l(";", node=node_cmd)
+            and self.match_l(";")
         ):
             return True
 
@@ -241,7 +247,6 @@ class Parser:
             return True
 
         if self.token.lexema == "for" and self.loop_for(node_cmd):
-            print("entrou aqui")
             return True
         if self.token.lexema == "while" and self.loop_while(node_cmd):
             return True
@@ -252,6 +257,7 @@ class Parser:
     def declarar(self, node: Node) -> bool:
         node_declarar = node.add_node(node_name="declarar")
         if self.tipo(node_declarar) and self.declarar_options(node_declarar):
+            self.declaracoes.append(node_declarar)
             return True
         self._erro("declarar", "regra não correta")
         return False
@@ -273,7 +279,7 @@ class Parser:
 
         if (
             self.token.lexema == "<-"
-            and self.match_l("<-", node=node)
+            and self.match_l("<-")
             and self.atribuicao_options(node=node)
         ):
             return True
@@ -378,10 +384,8 @@ class Parser:
 
     @visualizar_exec
     def exp_prioridade(self, node: Node) -> bool:
-        node_exp_prioridade = node.add_node(node_name="exp_prioridade")
-        if self.fator(node_exp_prioridade) and self.exp_prioridade_linha(
-            node_exp_prioridade
-        ):
+        # node_exp_prioridade = node.add_node(node_name="exp_prioridade")
+        if self.fator(node) and self.exp_prioridade_linha(node):
             return True
         self._erro("exp_prioridade")
         return False
@@ -401,9 +405,9 @@ class Parser:
             return True
         if (
             self.token.lexema == r"/"
-            and self.match_l(r"/", node=node_exp_prioridade_linha)
-            and self.fator(node_exp_prioridade_linha)
-            and self.exp_prioridade_linha(node_exp_prioridade_linha)
+            and self.match_l(r"/", node=node)
+            and self.fator(node)
+            and self.exp_prioridade_linha(node)
         ):
             return True
 
@@ -428,13 +432,20 @@ class Parser:
 
     @visualizar_exec
     def fator(self, node: Node) -> bool:
-        node_fator = node.add_node(node_name="fator")
+        # node_fator = node.add_node(node_name="fator")
         if not self.token:
             self._erro("fator", "token nulo")
             return False
-        if self.token.tipo == "ID" and self.id(node_fator):
+        if self.token.tipo == "ID" and self.id(node):
             return True
-        if self.token.tipo in ["INTEGER", "FLOATING"] and self.num(node_fator):
+        if (
+            self.token.lexema == "("
+            and self.match_l("(")
+            and self.expressao(node)
+            and self.match_l(")")
+        ):
+            return True
+        if self.token.tipo in ["INTEGER", "FLOATING"] and self.num(node):
             return True
         # if
         self._erro("fator")
@@ -442,10 +453,12 @@ class Parser:
 
     @visualizar_exec
     def leitura(self, node: Node) -> bool:
-        node_leitura = node.add_node(node_name="leitura")
-        if self.match_l("<<", node=node_leitura) and self.match_l(
-            "input", node=node_leitura
-        ):
+        node_leitura = node.add_node(
+            node_name="leitura",
+            enter=f"\nreadln({node.nodes[0].nodes[0].nome}",
+            exit_=");\n",
+        )
+        if self.match_l("<<") and self.match_l("input"):
             return True
         self._erro("leitura")
         return False
@@ -459,8 +472,8 @@ class Parser:
 
         if (
             self.token.lexema == "console"
-            and self.match_l("console", node=node_escrita)
-            and self.match_l("<<", node=node_escrita)
+            and self.match_l("console")
+            and self.match_l("<<")
             and self.escrita_options(node_escrita)
         ):
             return True
@@ -486,17 +499,17 @@ class Parser:
 
     @visualizar_exec
     def atribuicao(self, node: Node) -> bool:
-        node_atribuicao = node.add_node(node_name="atribuicao")
-        if self.match_l("<-", node=node_atribuicao) and self.atribuicao_options(
-            node_atribuicao
-        ):
+        node_atribuicao = node.add_node(node_name="atribuicao", enter=":=")
+        if self.match_l("<-") and self.atribuicao_options(node_atribuicao):
             return True
         self._erro("atribuicao")
         return False
 
     @visualizar_exec
     def atribuicao_options(self, node: Node) -> bool:
-        # node_atribuicao_options = node.add_node(node_name="atribuicao_options")
+        # node_atribuicao_options = node.add_node(
+        #     node_name="atribuicao_options", enter=":="
+        # )
         if not self.token:
             self._erro("atribuicao_options")
             return False
@@ -562,16 +575,16 @@ class Parser:
 
     @visualizar_exec
     def num_int(self, node: Node) -> bool:
-        node_num_int = node.add_node(node_name="num_int")
-        if self.match_t("INTEGER", node=node_num_int):
+        # node_num_int = node.add_node(node_name="num_int")
+        if self.match_t("INTEGER", node=node):
             return True
         self._erro("num_int")
         return False
 
     @visualizar_exec
     def num_decimal(self, node: Node) -> bool:
-        node_num_decimal = node.add_node(node_name="num_decimal")
-        if self.match_t("FLOATING", node=node_num_decimal):
+        # node_num_decimal = node.add_node(node_name="num_decimal")
+        if self.match_t("FLOATING", node=node):
             return True
         self._erro("num_decimal")
         return False
@@ -583,19 +596,19 @@ class Parser:
             self._erro("loop_for", "token nulo")
             return False
         if (
-            self.match_l("for", node=node_loop_for)
-            and self.match_l("(", node=node_loop_for)
+            self.match_l("for")
+            and self.match_l("(")
             and self.declarar(node_loop_for)
-            and self.match_l(";", node=node_loop_for)
+            and self.match_l(";")
             and self.condicional(node_loop_for)
-            and self.match_l(";", node=node_loop_for)
+            and self.match_l(";")
             and self.id(node_loop_for)
             and self.atribuicao(node_loop_for)
-            and self.match_l(")", node=node_loop_for)
-            and self.match_l("->", node=node_loop_for)
-            and self.match_l("{", node=node_loop_for)
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
             and self.bloco(node_loop_for)
-            and self.match_l("}", node=node_loop_for)
+            and self.match_l("}")
         ):
             return True
         self._erro("loop_for", "Regra não correta")
@@ -609,13 +622,13 @@ class Parser:
             return False
         if (
             self.match_l("while", node=node_loop_while)
-            and self.match_l("(", node=node_loop_while)
+            and self.match_l("(")
             and self.condicional(node_loop_while)
-            and self.match_l(")", node=node_loop_while)
-            and self.match_l("->", node=node_loop_while)
-            and self.match_l("{", node=node_loop_while)
+            and self.match_l(")")
+            and self.match_l("->")
+            and self.match_l("{")
             and self.bloco(node_loop_while)
-            and self.match_l("}", node=node_loop_while)
+            and self.match_l("}")
         ):
             return True
         self._erro("loop_while")

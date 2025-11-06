@@ -1,6 +1,7 @@
 int charles() -> {
 
   int variavel;
+  variavel<<input;
   int variavel <- 2;
   string variavel <- "teste";
   string variavel;

@@ -4,12 +4,15 @@ from lexic.token_lexico import Token
 
 
 class Node:
-    def __init__(self, nome: str, token: Token | None = None) -> None:
+    def __init__(
+        self, nome: str, token: Token | None = None, pai: "Node| None" = None
+    ) -> None:
         self.nome = nome
         self.nodes: list[Node] = []
         self.token = token
         self.enter = ""
         self.exit = ""
+        self.pai = pai
 
     @overload
     def add_node(
@@ -43,6 +46,7 @@ class Node:
         token: Token | None = None,
     ) -> "None | Node ":
         if isinstance(new_node, Node):
+            new_node.pai = self
             self.nodes.append(new_node)
             return None
 
@@ -51,14 +55,14 @@ class Node:
             and isinstance(exit_, str)
             and isinstance(node_name, str)
         ):
-            node_novo = Node(node_name, token=token)
+            node_novo = Node(node_name, token=token, pai=self)
             node_novo.enter = enter
             node_novo.exit = exit_
             self.nodes.append(node_novo)
             return node_novo
 
         if isinstance(node_name, str):
-            node_novo = Node(node_name, token=token)
+            node_novo = Node(node_name, token=token, pai=self)
             self.nodes.append(node_novo)
             return node_novo
         return None

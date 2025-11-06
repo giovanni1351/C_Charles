@@ -16,14 +16,25 @@ class Tree:
         for n in node.nodes:
             self.pre_order(n)
 
-    def print_code(self, node: Node | None = None) -> None:
+    def print_code(
+        self, node: Node | None = None, declaracoes: list[Node] | None = None
+    ) -> None:
         if node is None:
+            if declaracoes is not None:
+                print("vars")
+                for declaracao in declaracoes:
+                    print(
+                        f"    {declaracao.nodes[1].nodes[0].nome}: "
+                        f"{declaracao.nodes[0].nodes[0].nome};"
+                    )
             self.print_code(self.root)
             print()
             return
         print(node.enter, end="")
         if len(node.nodes) == 0:
-            print(node.nome, end=" ")
+            if node.token:
+                # print(node.nome, end=" ")
+                print(node.token.lexema, end=" ")
 
         for n in node.nodes:
             self.print_code(n)

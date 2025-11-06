@@ -20,6 +20,10 @@ class IdentifierOperator(AFD):
                 characters += atual
                 i += 1
                 continue
+            if atual in ["_"]:
+                characters += atual
+                i += 1
+                continue
             if atual in "0123456789" and len(characters) > 1:
                 characters += atual
                 i += 1
