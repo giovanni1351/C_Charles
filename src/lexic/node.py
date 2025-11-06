@@ -68,7 +68,6 @@ class Node:
         return None
 
     def get_tree(self) -> str:
-        print("AST")
         buffer: list[str] = []
         self.printar(buffer, "", "")
 

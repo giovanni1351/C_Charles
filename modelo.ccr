@@ -1,0 +1,3 @@
+int charles() -> {
+    console << "Programa direito mardito";
+}

@@ -38,7 +38,7 @@ class Lexer:
         ]
 
     def skip_white_space(self) -> None:
-        while self.code.current() == " " or self.code.current() == "\n":
+        while self.code.current() == " " or self.code.current() == "\n" or self.code.current() == "\t":  # noqa: E501
             next(self.code)
 
     def error(self) -> None:
