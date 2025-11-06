@@ -1,6 +1,7 @@
 int charles() -> {
 
   int variavel;
+  variavel<<input;
   int variavel <- 2;
   string variavel <- "teste";
   string variavel;
@@ -23,6 +24,8 @@ int charles() -> {
   }
   if(variavel = 30) -> {
     console<<" A 8===D variavel é exatamente 30";
+  } else -> {
+    console<<" else entrou";
   }
  
  

@@ -1,9 +1,40 @@
+from typing import overload
+
+from lexic.token_lexico import Token
+
+
 class Node:
-    def __init__(self, nome: str) -> None:
+    def __init__(
+        self, nome: str, token: Token | None = None, pai: "Node| None" = None
+    ) -> None:
         self.nome = nome
         self.nodes: list[Node] = []
+        self.token = token
         self.enter = ""
         self.exit = ""
+        self.pai = pai
+
+    @overload
+    def add_node(
+        self,
+        *,
+        new_node: "Node | None" = None,
+        node_name: None = None,
+        enter: str | None = None,
+        exit_: str | None = None,
+        token: Token | None = None,
+    ) -> "None": ...
+
+    @overload
+    def add_node(
+        self,
+        *,
+        new_node: "Node | None" = None,
+        node_name: str,
+        enter: str | None = None,
+        exit_: str | None = None,
+        token: Token | None = None,
+    ) -> "Node": ...
 
     def add_node(
         self,
@@ -12,9 +43,10 @@ class Node:
         node_name: str | None = None,
         enter: str | None = None,
         exit_: str | None = None,
-    ) -> "None | Node":
+        token: Token | None = None,
+    ) -> "None | Node ":
         if isinstance(new_node, Node):
-            print("IOPAAA")
+            new_node.pai = self
             self.nodes.append(new_node)
             return None
 
@@ -23,14 +55,14 @@ class Node:
             and isinstance(exit_, str)
             and isinstance(node_name, str)
         ):
-            node_novo = Node(node_name)
+            node_novo = Node(node_name, token=token, pai=self)
             node_novo.enter = enter
             node_novo.exit = exit_
             self.nodes.append(node_novo)
             return node_novo
 
         if isinstance(node_name, str):
-            node_novo = Node(node_name)
+            node_novo = Node(node_name, token=token, pai=self)
             self.nodes.append(node_novo)
             return node_novo
         return None
@@ -44,20 +76,10 @@ class Node:
 
     def printar(self, buffer: list[str], prefix: str, children_prefix: str) -> None:
         buffer.append(prefix)
-        buffer.append(f"| {self.nome} |")
+        buffer.append(f"{self.nome} {self.token if self.token else ''}")
         buffer.append("\n")
-        for node in self.nodes:
-            node.printar(buffer, children_prefix + "|___", children_prefix + "|   ")
-
-
-if __name__ == "__main__":
-    nodes = [Node(str(a)) for a in range(1, 10)]
-    node_pai = Node("pai")
-    for node in nodes:
-        node_pai.add_node(new_node=node)
-        nodes_filhos = (
-            Node(str(a)) for a in range(int(node.nome) * 10, int(node.nome) * 10 + 10)
-        )
-        for node_filho in nodes_filhos:
-            node.add_node(new_node=node_filho)
-    print(node_pai.get_tree())
+        for i, node in enumerate(self.nodes):
+            if i == len(self.nodes):
+                node.printar(buffer, children_prefix + "`-- ", children_prefix + "   ")
+            else:
+                node.printar(buffer, children_prefix + "+---", children_prefix + "|  ")
