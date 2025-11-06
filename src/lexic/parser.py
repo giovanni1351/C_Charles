@@ -57,8 +57,8 @@ class Parser:
             print(f"{message= }")
         print("Token invalido", self.token)
         print("----" * 10)
-        if exit_program:
-            exit()
+        # if exit_program:
+        #     exit()
 
     @visualizar_exec
     def cmd_if(self, node: Node) -> bool:
