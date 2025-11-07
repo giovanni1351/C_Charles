@@ -1,0 +1,8 @@
+int charles()->{
+  int a <-0;
+  if (a < 10)->{
+    console<<"A é menor q 10";
+  } else -> {
+    console <<"A é maior q 10";
+  }
+}

@@ -1,0 +1,15 @@
+depara = {
+    "int": "integer",
+    "string": "string",
+    "float": "real",
+    "->": "then",
+    "for": "for",
+    "while": "while",
+    "if": "if",
+    "else": "else",
+    "input": "input",
+    "boolean": "boolean",
+    "console": "console",
+    "true": "true",
+    "false": "false",
+}

@@ -1,0 +1,12 @@
+int charles()->{
+  string teste;
+  teste <- "teste";
+  int valor<- ((3 + 4) + 2)*3;
+  float valor2<- 0.23;
+  console<<valor;
+  console<<valor2;
+
+  for(int y <- 0; x < 100; x <- x *3) -> {
+    console<<x;
+  }
+}

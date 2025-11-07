@@ -6,6 +6,9 @@ from lexic.token_lexico import Token
 from lexic.tree import Tree
 
 
+class ParserError(Exception): ...
+
+
 def visualizar_exec[**P, R](func: Callable[P, R]) -> Callable[P, R]:
     """Decorador que mede o tempo de execução de uma função."""
 
@@ -57,8 +60,8 @@ class Parser:
             print(f"{message= }")
         print("Token invalido", self.token)
         print("----" * 10)
-        # if exit_program:
-        #     exit()
+        msg = f"{regra}: {message}"
+        raise ParserError(msg)
 
     @visualizar_exec
     def cmd_if(self, node: Node) -> bool:
@@ -68,7 +71,7 @@ class Parser:
             and self.match_l("(")
             and self.condicional(node=node_cmd_if)
             and self.match_l(")")
-            and self.match_l("->")
+            and self.match_l("->", node=node_cmd_if)
             and self.match_l("{")
             and self.bloco(node=node_cmd_if)
             and self.match_l("}")
@@ -440,9 +443,9 @@ class Parser:
             return True
         if (
             self.token.lexema == "("
-            and self.match_l("(")
+            and self.match_l("(", node=node)
             and self.expressao(node)
-            and self.match_l(")")
+            and self.match_l(")", node=node)
         ):
             return True
         if self.token.tipo in ["INTEGER", "FLOATING"] and self.num(node):
@@ -453,7 +456,7 @@ class Parser:
 
     @visualizar_exec
     def leitura(self, node: Node) -> bool:
-        node_leitura = node.add_node(
+        node.add_node(
             node_name="leitura",
             enter=f"\nreadln({node.nodes[0].nodes[0].nome}",
             exit_=");\n",
@@ -465,7 +468,9 @@ class Parser:
 
     @visualizar_exec
     def escrita(self, node: Node) -> bool:
-        node_escrita = node.add_node(node_name="escrita")
+        node_escrita = node.add_node(
+            node_name="escrita", enter="\nwriteln(", exit_=");\n"
+        )
         if not self.token:
             self._erro("escrita", "token nulo")
             return False
@@ -525,8 +530,11 @@ class Parser:
 
     @visualizar_exec
     def texto_string(self, node: Node) -> bool:
-        node_texto_string = node.add_node(node_name="texto_string")
+        node_texto_string = node.add_node(
+            node_name="texto_string", enter="'", exit_="'"
+        )
         if self.match_t("STRING", node=node_texto_string):
+            # node_texto_string.nodes[0].token.lexema.replace('"', "'")
             return True
         self._erro("texto_string")
         return False

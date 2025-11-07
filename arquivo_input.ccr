@@ -1,0 +1,5 @@
+int charles()-> {
+  int a;
+  a<<input;
+  console<<a;
+}
