@@ -1,16 +1,8 @@
 int charles()->{
-	string teste;
-	teste <- "teste";
-	int valor<- ((3 + 4) + 2)*3;
-	float valor2<- 0.23;
-	console<<valor;
-	console<<valor2;
-	console<< teste;
-	int x <- 0;
-	int um <- 1;
-	if ( (x < 2) && (um > 0) ) -> {
-		console<<"x eh menor que 2";
-	} 
+	int valor;
+  valor<<input;
+  int resultado <- valor*100;
+  console<<resultado;
 }
 
 

@@ -78,7 +78,7 @@ class Tree:
             and node.nodes[0].nome == "id"
             and node.nodes[1].nome == "leitura"
         ):
-            self.traducao += ""
+            self.traducao += f"readln({node.nodes[0].nodes[0].nome});\n"
             return
         if node.nome == "declarar":
             self.declarar(node)

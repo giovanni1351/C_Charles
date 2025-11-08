@@ -7,8 +7,27 @@ Caso você ja tenha o UV instalado no seu computador, basta entrar pelo terminal
 na pasta onde contem o arquivo [pyproject.py](pyproject.toml) e rodar o comando
 
 ```bash
-uv run src/main.py
+uv run src/main.py <caminho_arquivo>
 ```
+
+Existem a flag `--limpo ` e `--no-fpc`, a limpo roda e traz o resultado final do código compilado
+e a no fpc, vai apenas traduzir e não gerará nenhum código em pascal.
+
+```bash
+uv run src/main.py <caminho_arquivo> --no-fpc
+```
+
+```bash
+uv run src/main.py <caminho_arquivo> --limpo
+```
+
+e caso deseja utilizar a nossa IDE, bastar rodar o comando
+
+```bash
+uv run IDE/ide.py
+```
+
+ela iniciará uma interface grafica, onde será possivel analizar a arvore, código em pascal e a saida!
 
 Caso deseje instalar o uv o basta clickar no seguinte link: [UV Astral](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -84,14 +103,12 @@ console << variavel;
 ```
 int variavel;
 variavel << input;
-bool estaNoIntervalo;
 if ( variavel > 10 && variavel < 30 ) -> {
   estaNoIntervalo = true;
 }
-if (!estaNoIntervalor){
-  console << "Não está no intervalo";
-}
 if(variavel = 30){
   console<< "A variavel é exatamente 30";
+} else -> {
+  console<< "A variavel é diferente de 30";
 }
 ```
