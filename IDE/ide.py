@@ -153,6 +153,7 @@ class Ide:
             self.processa_modelo()
 
         self.atualizar_linhas()
+        self.highlight()
 
     def mostrar_pagina(self, nome_pagina: str) -> None:
         for pagina in self.paginas.values():
