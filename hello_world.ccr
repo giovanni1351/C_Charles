@@ -6,7 +6,12 @@ int charles()->{
   console<<valor;
   console<<valor2;
 
-  for(int y <- 0; x < 100; x <- x *3) -> {
+  for(int x <- 0; x < 100; x <- x + 3) -> {
     console<<x;
+  }
+  if (x < 2)->{
+    console<<"x é menor que 2";
+  } else -> {
+    console<<"x é maior que 2";
   }
 }

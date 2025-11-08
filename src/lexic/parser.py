@@ -275,7 +275,7 @@ class Parser:
 
     @visualizar_exec
     def declarar_options_linha(self, node: Node) -> bool:
-        # node_declarar_options_linha = node.add_node(node_name="declarar_options_linha")
+        # node_declarar_options_linha = node.add_node(node_name="declarar_options_linha")  # noqa: E501
         if not self.token:
             self._erro("declarar_options_linha")
             return False

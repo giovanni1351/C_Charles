@@ -4,6 +4,7 @@ from lexic.node import Node
 
 class Tree:
     def __init__(self, root: Node | None = None) -> None:
+        self.traducao: str = ""
         self.reserved_types = [
             "EOF",
             "PARENTHESIS",
@@ -35,11 +36,11 @@ class Tree:
         for n in node.nodes:
             self.pre_order(n)
 
-    def print_code(
+    def print_code(  # noqa: C901
         self, node: Node | None = None, declaracoes: list[Node] | None = None
     ) -> None:
         if node is None:
-            print("program charles;\n")
+            self.traducao += "program charles;\n"
             if declaracoes is not None:
                 variaveis = set[tuple[str, str]]()
                 for declaracao in declaracoes:
@@ -50,74 +51,81 @@ class Tree:
                         )
                     )
                 if variaveis:
-                    print("var\n")
+                    self.traducao += "var\n"
                     for identificador, tipo in variaveis:
-                        print(f"    {identificador}: {depara[tipo]};")
+                        self.traducao += f"    {identificador}: {depara[tipo]};\n"
             self.print_code(self.root)
-            print()
+            self.traducao += "\n"
+            print(self.traducao)
             return
 
         if node.pai and node.nome == "tipo" and node.pai.nome == "programa":
             return
 
-        print(
-            # "entrada,",
-            node.enter,
-            end="",
-        )
+        self.traducao += node.enter
+
         if (
             node.nome == "cmd"
             and node.nodes[0].nome == "id"
             and node.nodes[1].nome == "atribuicao"
         ):
-            print(node.nodes[0].nodes[0].nome, ":=", end="")
+            self.traducao += node.nodes[0].nodes[0].nome + ":="
             self.print_code(node.nodes[1])
-            print(";", end="")
+            self.traducao += ";\n"
             return
         if (
             node.nome == "cmd"
             and node.nodes[0].nome == "id"
             and node.nodes[1].nome == "leitura"
         ):
-            print("")
+            self.traducao += ""
             return
         if node.nome == "declarar":
             self.declarar(node)
             return
         if node.nome == "loop_for":
             self.declarar(node.nodes[0])
-            print("while ", end="")
+            self.traducao += " while "
             self.print_code(node.nodes[1])
-            print("do")
+            self.traducao += " do "
             cmd = Node("cmd")
             cmd.add_node(new_node=node.nodes[2])
             cmd.add_node(new_node=node.nodes[3])
             node.nodes[4].add_node(new_node=cmd)
             self.print_code(node.nodes[4])
+            self.traducao += ";\n"
             return
-
+        if node.nome == "cmd_if":
+            self.traducao += "if "
+            self.print_code(node.nodes[1])
+            self.traducao += " then "
+            self.print_code(node.nodes[3])
+            if len(node.nodes) == 5:
+                self.print_code(node.nodes[4])
+            self.traducao += ";\n"
+            return
         if len(node.nodes) == 0:
             if (
                 node.nome not in self.reserved_types
                 and node.token
                 and node.token.tipo == "STRING"
             ):
-                print(node.nome[1:-1].replace("\n", "\\n"), end="")
+                self.traducao += node.nome[1:-1].replace("\n", "\\n")
 
             elif node.token and not depara.get(node.token.lexema):
-                print(node.token.lexema, end=" ")
+                self.traducao += node.token.lexema
             elif node.token and depara.get(node.token.lexema):
-                print(depara[node.token.lexema], end=" ")
+                self.traducao += depara[node.token.lexema]
 
         for n in node.nodes:
             self.print_code(n)
-        print(
-            # "saida,",
-            node.exit,
-            end="",
-        )
-        if node.pai and node.pai.nome == "programa" and node.nome == "bloco":
-            print(".", end="")
+        self.traducao += node.exit
+        if node.nome == "bloco":
+            if node.pai and node.pai.nome == "programa":
+                self.traducao += "."
+            else:
+                # self.traducao += ";"
+                ...
 
     def print_tree(self) -> None:
         print(self.root.get_tree())
@@ -127,7 +135,7 @@ class Tree:
             return
         if len(node.nodes) == 3:
             self.print_code(node.nodes[1])
-            print(":= ", end="")
+            self.traducao += ":= "
             self.print_code(node.nodes[2])
-            print(";")
+            self.traducao += ";\n"
             return
