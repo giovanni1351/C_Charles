@@ -86,6 +86,12 @@ class Tree:
         if node.nome == "!=":
             self.traducao += " <> "
             return
+        if node.nome == "&&" or node.nome == "&":
+            self.traducao += ") and ("
+            return
+        if node.nome == "||" or node.nome == "|":
+            self.traducao += ") or ("
+            return
         if node.nome == "loop_while":
             self.traducao += "while "
             self.print_code(node.nodes[1])
@@ -106,9 +112,9 @@ class Tree:
             self.traducao += ";\n"
             return
         if node.nome == "cmd_if":
-            self.traducao += "if "
+            self.traducao += "if ("
             self.print_code(node.nodes[1])
-            self.traducao += " then "
+            self.traducao += ") then "
             self.print_code(node.nodes[3])
             if len(node.nodes) == 5:
                 self.print_code(node.nodes[4])

@@ -38,6 +38,13 @@ class LogicOperator(AFD):
                     return Token("LOGIC_OP", "&&")
                 return Token("LOGIC_OP", "&")
 
+            case "|":
+                next(code)
+                if code.current() == "|":
+                    next(code)
+                    return Token("LOGIC_OP", "||")
+                return Token("LOGIC_OP", "|")
+
             case "=":
                 next(code)
                 return Token("RELACIONAL_OP", "=")

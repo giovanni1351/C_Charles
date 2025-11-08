@@ -65,8 +65,6 @@ int variavel;
 variavel << input;
 if (variavel > 10) ->{
   console << variavel
-} else if (variavel < -10) ->{
-  console << "Variavel menor que -10";
 } else ->{
   console << "Esta dentro do intervalo -10 e 10";
 }

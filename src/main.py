@@ -1,7 +1,6 @@
+import os
 import sys
 from typing import TYPE_CHECKING
-
-from rich import print  # noqa: A004
 
 from lexic.lexer import Lexer
 from lexic.parser import Parser
@@ -20,7 +19,24 @@ class Main:
             arvore = parser.main()
             arvore.print_tree()
             arvore.print_code(node=None, declaracoes=parser.declaracoes)
-            print(parser.id_hash_table)
+            if "--no-fpc" in sys.argv:
+                return
+            with open("traducao.pas", "w") as file:
+                file.write(arvore.traducao)
+            os.system("fpc traducao.pas")  # noqa: S605, S607
+            os.remove("traducao.pas")
+            try:
+                if "--limpo" in sys.argv:
+                    os.system("cls")
+            except:
+                ...
+            os.system("traducao.exe")  # noqa: S605, S607
+            try:
+                os.remove("traducao.exe")
+            except FileNotFoundError:
+                print("Erro na compilação do código, provavelmente um erro semantico!")
+                exit()
+            os.remove("traducao.o")
 
 
 if __name__ == "__main__":
