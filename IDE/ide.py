@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, NoReturn
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 from lexic.lexer import Lexer
-from lexic.parser import Parser
+from lexic.parser import Parser, ParserError
 
 if TYPE_CHECKING:
     from lexic.token_lexico import Token
@@ -47,16 +47,16 @@ class Ide:
 
         btn_editor = tk.Button(
             nav_frame, text="Editor", command=lambda: self.mostrar_pagina("editor")
-        )  # noqa: E501
+        )
         btn_tokens = tk.Button(
             nav_frame, text="Tokens", command=lambda: self.mostrar_pagina("tokens")
-        )  # noqa: E501
+        )
         btn_arvore = tk.Button(
             nav_frame, text="Árvore", command=lambda: self.mostrar_pagina("arvore")
-        )  # noqa: E501
+        )
         btn_traducao = tk.Button(
             nav_frame, text="Tradução", command=lambda: self.mostrar_pagina("traducao")
-        )  # noqa: E501
+        )
 
         btn_editor.pack(side="left", padx=5, pady=5)
         btn_tokens.pack(side="left", padx=5, pady=5)
@@ -80,12 +80,12 @@ class Ide:
             background="#f0f0f0",
             state="disabled",
             font=("Consolas", 12),
-        )  # noqa: E501
+        )
         self.numeros.pack(side="left", fill="y")
 
         self.texto = tk.Text(
             self.frame_editor, wrap="none", undo=True, font=("Consolas", 12)
-        )  # noqa: E501
+        )
         self.texto.pack(fill="both", expand=True)
 
         tk.Label(
@@ -93,7 +93,7 @@ class Ide:
             text="Saída do compilador:",
             anchor="w",
             font=("Consolas", 10, "bold"),
-        ).pack(fill="x")  # noqa: E501
+        ).pack(fill="x")
 
         self.saida = tk.Text(
             self.page_editor,
@@ -102,7 +102,7 @@ class Ide:
             fg="#0f0",
             font=("Consolas", 11),
             state="disabled",
-        )  # noqa: E501
+        )
 
         sys.stdout = Redirector(self.saida)
         sys.stderr = Redirector(self.saida)
@@ -119,7 +119,7 @@ class Ide:
         self.page_tokens = tk.Frame(self.container)
         tk.Label(
             self.page_tokens, text="Lista de Tokens", font=("Consolas", 12, "bold")
-        ).pack()  # noqa: E501
+        ).pack()
 
         self.tokens_text = tk.Text(self.page_tokens, font=("Consolas", 12))
         self.tokens_text.pack(fill="both", expand=True)
@@ -127,7 +127,7 @@ class Ide:
         self.page_arvore = tk.Frame(self.container)
         tk.Label(
             self.page_arvore, text="Árvore Sintática", font=("Consolas", 12, "bold")
-        ).pack()  # noqa: E501
+        ).pack()
 
         self.arvore_text = tk.Text(self.page_arvore, font=("Consolas", 12))
         self.arvore_text.pack(fill="both", expand=True)
@@ -135,7 +135,7 @@ class Ide:
         self.page_traducao = tk.Frame(self.container)
         tk.Label(
             self.page_traducao, text="Tradução em Pascal", font=("Consolas", 12, "bold")
-        ).pack()  # noqa: E501
+        ).pack()
 
         self.traducao_text = tk.Text(self.page_traducao, font=("Consolas", 12))
         self.traducao_text.pack(fill="both", expand=True)
@@ -173,8 +173,11 @@ class Ide:
 
         for token in tokens:
             self.tokens_text.insert(tk.END, f"{token}\n")
-
-        arvore: Tree = parser.main()
+        try:
+            arvore: Tree = parser.main()
+        except ParserError as error:
+            print(f"Erro de parse: {error}")
+            return
         arvore_str: str = arvore.root.get_tree()
 
         conteudo = self.saida.get("1.0", tk.END).strip()
@@ -242,7 +245,7 @@ class Ide:
     def salvar_arquivo(self) -> None:
         caminho = filedialog.asksaveasfilename(
             defaultextension=".ccr", filetypes=[("Arquivos C-Charles", "*.ccr")]
-        )  # noqa: E501
+        )
 
         if caminho:
             with open(caminho, "w", encoding="utf-8") as arquivo:
@@ -267,7 +270,7 @@ class Ide:
 
         codigo = self.texto.get("1.0", "end-1c")
         palavras_chave = (
-            r"\b(string|boolean|float|int|for|while|if|else|else if|input|console)\b"  # noqa: E501
+            r"\b(string|boolean|float|int|for|while|if|else|else if|input|console)\b"
         )
         strings = r"(\".*?\"|\'.*?\')"
 

@@ -83,6 +83,16 @@ class Tree:
         if node.nome == "declarar":
             self.declarar(node)
             return
+        if node.nome == "!=":
+            self.traducao += " <> "
+            return
+        if node.nome == "loop_while":
+            self.traducao += "while "
+            self.print_code(node.nodes[1])
+            self.traducao += " do\n "
+            self.print_code(node.nodes[2])
+            self.traducao += ";\n"
+            return
         if node.nome == "loop_for":
             self.declarar(node.nodes[0])
             self.traducao += " while "
