@@ -8,7 +8,7 @@ int charles()->{
 	console<< teste;
 	int x <- 0;
 	int um <- 1;
-	if (x < 2 ) -> {
+	if ( (x < 2) && (um > 0) ) -> {
 		console<<"x eh menor que 2";
 	} 
 }
