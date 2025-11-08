@@ -36,11 +36,15 @@ class Parser:
         self.token = self.get_next_token()
         node_raiz = Node("programa")
         arvore = Tree(node_raiz)
-        if self.programa(node_raiz) and (self.token is None or self.match_t("EOF")):
-            print("Sintaticamente correto")
-        else:
-            self._erro("main")
-
+        try:
+            if self.programa(node_raiz) and (self.token is None or self.match_t("EOF")):
+                print("Sintaticamente correto")
+            else:
+                self._erro("main")
+        except ParserError as error:
+            print(
+                f"Ocorreu um erro de parsing, verifique se a sintaxe está correta!\nErro: {error}"
+            )
         return arvore
 
     def get_next_token(self) -> Token | None:

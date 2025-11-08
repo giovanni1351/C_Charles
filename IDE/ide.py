@@ -45,10 +45,18 @@ class Ide:
         nav_frame = tk.Frame(self.root, bg="#2d2d2d", height=40)
         nav_frame.pack(fill="x")
 
-        btn_editor = tk.Button(nav_frame, text="Editor", command=lambda: self.mostrar_pagina("editor"))  # noqa: E501
-        btn_tokens = tk.Button(nav_frame, text="Tokens", command=lambda: self.mostrar_pagina("tokens"))  # noqa: E501
-        btn_arvore = tk.Button(nav_frame, text="Árvore", command=lambda: self.mostrar_pagina("arvore"))  # noqa: E501
-        btn_traducao = tk.Button(nav_frame, text="Tradução", command=lambda: self.mostrar_pagina("traducao"))  # noqa: E501
+        btn_editor = tk.Button(
+            nav_frame, text="Editor", command=lambda: self.mostrar_pagina("editor")
+        )  # noqa: E501
+        btn_tokens = tk.Button(
+            nav_frame, text="Tokens", command=lambda: self.mostrar_pagina("tokens")
+        )  # noqa: E501
+        btn_arvore = tk.Button(
+            nav_frame, text="Árvore", command=lambda: self.mostrar_pagina("arvore")
+        )  # noqa: E501
+        btn_traducao = tk.Button(
+            nav_frame, text="Tradução", command=lambda: self.mostrar_pagina("traducao")
+        )  # noqa: E501
 
         btn_editor.pack(side="left", padx=5, pady=5)
         btn_tokens.pack(side="left", padx=5, pady=5)
@@ -63,15 +71,38 @@ class Ide:
         self.frame_editor = tk.Frame(self.page_editor)
         self.frame_editor.pack(fill="both", expand=True)
 
-        self.numeros = tk.Text(self.frame_editor, width=4, padx=4, takefocus=0, border=0, background="#f0f0f0", state="disabled", font=("Consolas", 12))  # noqa: E501
+        self.numeros = tk.Text(
+            self.frame_editor,
+            width=4,
+            padx=4,
+            takefocus=0,
+            border=0,
+            background="#f0f0f0",
+            state="disabled",
+            font=("Consolas", 12),
+        )  # noqa: E501
         self.numeros.pack(side="left", fill="y")
 
-        self.texto = tk.Text(self.frame_editor, wrap="none", undo=True, font=("Consolas", 12))  # noqa: E501
+        self.texto = tk.Text(
+            self.frame_editor, wrap="none", undo=True, font=("Consolas", 12)
+        )  # noqa: E501
         self.texto.pack(fill="both", expand=True)
 
-        tk.Label(self.page_editor, text="Saída do compilador:", anchor="w", font=("Consolas", 10, "bold")).pack(fill="x")  # noqa: E501
+        tk.Label(
+            self.page_editor,
+            text="Saída do compilador:",
+            anchor="w",
+            font=("Consolas", 10, "bold"),
+        ).pack(fill="x")  # noqa: E501
 
-        self.saida = tk.Text(self.page_editor, height=10, bg="#111", fg="#0f0", font=("Consolas", 11), state="disabled")  # noqa: E501
+        self.saida = tk.Text(
+            self.page_editor,
+            height=10,
+            bg="#111",
+            fg="#0f0",
+            font=("Consolas", 11),
+            state="disabled",
+        )  # noqa: E501
 
         sys.stdout = Redirector(self.saida)
         sys.stderr = Redirector(self.saida)
@@ -86,19 +117,25 @@ class Ide:
         self.texto.tag_config("string", foreground="#aa5500")
 
         self.page_tokens = tk.Frame(self.container)
-        tk.Label(self.page_tokens, text="Lista de Tokens", font=("Consolas", 12, "bold")).pack()  # noqa: E501
+        tk.Label(
+            self.page_tokens, text="Lista de Tokens", font=("Consolas", 12, "bold")
+        ).pack()  # noqa: E501
 
         self.tokens_text = tk.Text(self.page_tokens, font=("Consolas", 12))
         self.tokens_text.pack(fill="both", expand=True)
 
         self.page_arvore = tk.Frame(self.container)
-        tk.Label(self.page_arvore, text="Árvore Sintática", font=("Consolas", 12, "bold")).pack()  # noqa: E501
+        tk.Label(
+            self.page_arvore, text="Árvore Sintática", font=("Consolas", 12, "bold")
+        ).pack()  # noqa: E501
 
         self.arvore_text = tk.Text(self.page_arvore, font=("Consolas", 12))
         self.arvore_text.pack(fill="both", expand=True)
 
         self.page_traducao = tk.Frame(self.container)
-        tk.Label(self.page_traducao, text="Tradução em Pascal", font=("Consolas", 12, "bold")).pack()  # noqa: E501
+        tk.Label(
+            self.page_traducao, text="Tradução em Pascal", font=("Consolas", 12, "bold")
+        ).pack()  # noqa: E501
 
         self.traducao_text = tk.Text(self.page_traducao, font=("Consolas", 12))
         self.traducao_text.pack(fill="both", expand=True)
@@ -107,7 +144,7 @@ class Ide:
             "editor": self.page_editor,
             "tokens": self.page_tokens,
             "arvore": self.page_arvore,
-            "traducao": self.page_traducao
+            "traducao": self.page_traducao,
         }
 
         self.mostrar_pagina("editor")
@@ -143,13 +180,12 @@ class Ide:
         conteudo = self.saida.get("1.0", tk.END).strip()
 
         if conteudo == "Sintaticamente correto":
-
             self.saida.config(state="normal")
             self.saida.delete("1.0", tk.END)
 
             # Alerta de Gambiarra
             # Alterar para apenas escrever no arquivo quando tiver a string de traduçãp
-            arvore.print_code()
+            arvore.print_code(declaracoes=parser.declaracoes)
             with open("traducao.pas", "w", encoding="utf-8") as arquivo:
                 conteudo = self.saida.get("1.0", tk.END)
                 arquivo.write(conteudo)
@@ -167,14 +203,14 @@ class Ide:
                 compilacao = subprocess.run(
                     ["fpc", "traducao.pas"],  # noqa: S607
                     text=True,
-                    capture_output=True
+                    capture_output=True,
                 )
 
                 if compilacao.returncode == 0:
                     execucao = subprocess.run(  # noqa: S603
                         ["./traducao.exe" if os.name != "nt" else "traducao.exe"],
                         text=True,
-                        capture_output=True
+                        capture_output=True,
                     )
                     self.mostrar_saida(execucao.stdout)
                     self.mostrar_saida(execucao.stderr)
@@ -182,7 +218,6 @@ class Ide:
                     self.mostrar_saida("Erro na compilação do pascal.\n")
             except FileNotFoundError:
                 self.mostrar_saida("Sem FPC.\n")
-
 
         self.arvore_text.delete("1.0", tk.END)
         self.arvore_text.insert(tk.END, arvore_str)
@@ -205,7 +240,9 @@ class Ide:
             self.saida.config(state="disabled")
 
     def salvar_arquivo(self) -> None:
-        caminho = filedialog.asksaveasfilename(defaultextension=".ccr", filetypes=[("Arquivos C-Charles", "*.ccr")])  # noqa: E501
+        caminho = filedialog.asksaveasfilename(
+            defaultextension=".ccr", filetypes=[("Arquivos C-Charles", "*.ccr")]
+        )  # noqa: E501
 
         if caminho:
             with open(caminho, "w", encoding="utf-8") as arquivo:
@@ -229,7 +266,9 @@ class Ide:
         self.texto.tag_remove("comentarios", "1.0", "end")
 
         codigo = self.texto.get("1.0", "end-1c")
-        palavras_chave = (r"\b(string|boolean|float|int|for|while|if|else|else if|input|console)\b")  # noqa: E501
+        palavras_chave = (
+            r"\b(string|boolean|float|int|for|while|if|else|else if|input|console)\b"  # noqa: E501
+        )
         strings = r"(\".*?\"|\'.*?\')"
 
         for match in re.finditer(palavras_chave, codigo, re.MULTILINE):
