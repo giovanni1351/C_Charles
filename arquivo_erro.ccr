@@ -11,7 +11,8 @@ int charles()->{
     if (x < 2)->{
       console<<"x é menor que 2";
     } else -> {
-      if ( 1 = 2 ) -> {
+      int um <- 1;
+      if (  um  = 2 ) -> {
         console << "nunca vai chegar aqui";
       } else -> {
         console<<" hahahaah";

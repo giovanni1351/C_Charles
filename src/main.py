@@ -3,7 +3,7 @@ import sys
 from typing import TYPE_CHECKING
 
 from lexic.lexer import Lexer
-from lexic.parser import Parser
+from lexic.parser import Parser, ParserError
 
 if TYPE_CHECKING:
     from lexic.token_lexico import Token
@@ -16,7 +16,11 @@ class Main:
             lexer: Lexer = Lexer(code)
             tokens: list[Token] = lexer.get_token()
             parser = Parser(tokens)
-            arvore = parser.main()
+            try:
+                arvore = parser.main()
+            except ParserError as error:
+                print(f"Ocorreu um erro de parsing {error}")
+                exit()
             arvore.print_tree()
             arvore.print_code(node=None, declaracoes=parser.declaracoes)
             if "--no-fpc" in sys.argv:
