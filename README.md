@@ -1,4 +1,12 @@
-# Como rodar?
+# C - Charles
+
+## Integrantes
+- Giovanni Morassi
+- Henrique Finatti
+- Tiago Fagundes
+- Mateus Marana
+
+## Como rodar?
 
 O projeto é feito utilizando o gerenciador de pacotes UV, para rodar como o esperado é necessário ter instalado em sua maquina ou então, criar um ambiente virtual e instalar o rich com o seu gerenciador de pacotes (ele é a unica dependencia).
 Caso prefira, é possivel rodar com o python global caso tenha o rich instalado
@@ -39,7 +47,7 @@ Utilizamos o ruff (formater e linter) e pyright (type checker). Eles nos trazem 
 
 O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, para a criação de prints coloridos, apenas para questão estética.
 
-# Lista de Tokens
+## Lista de Tokens
 
 > Abaixo estão todos os tokens aceitos pelo analizador lexico.
 
@@ -59,7 +67,7 @@ O projeto tem o intuito de ser o mais puro possivel, utilizando apenas o rich, p
 - **numero_decimal**: [0-9]+.[0-9]+
 - **textos**: [a-z _ A-Z 0-9 ]\*
 
-# Gramatica
+## Gramatica
 
 > Exemplos da sintaxe da nossa linguagem
 > obs: Linguagem livre de contexto ainda não feita, está em nossos proximos steps
