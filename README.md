@@ -1,6 +1,7 @@
 # C - Charles
 
 ## Integrantes
+
 - Giovanni Morassi
 - Henrique Finatti
 - Tiago Fagundes
@@ -120,3 +121,37 @@ if(variavel = 30){
   console<< "A variavel é diferente de 30";
 }
 ```
+
+# Gramática livre de contexto
+
+- **programa** -> tipo 'charles' '()' '->' '{' bloco '}'
+- **bloco** -> cmd bloco_options
+- **bloco_options** -> bloco | e
+- **cmd** -> leitura ';' | escrita ';' | atribuicao ';' | cmd_if | declarar;| loop_for | loop_while
+- **declarar** -> tipo declarar_options
+- **declarar_options** -> id declarar_options_linha ';'
+- **declarar_options_linha** -> '<-' atribuicao_options | e
+- **cmd_if** -> 'if' '(' condicional ')' '->' '{' bloco '}' option_else
+- **option_else** -> 'else' '->' '{' bloco '}' | e
+- **condicional** -> expressão operador_relacional expressão condicional_linha |'!' expressão condicional_linha
+- **condicional_linha** -> operador_logico condicional condicional_linha
+- **expressão** -> exp_prioridade expressão_linha
+- **expressão_linha** -> '+' exp_prioridade expressão_linha | '-' exp_prioridade expressão_linha | e
+- **exp_prioridade** -> fator exp_prioridade_linha
+- **exp_prioridade_linha** -> '\*' fator exp_prioridade_linha | '/' fator exp_prioridade_linha | e
+- **fator** -> id | num | '(' expressão ')'
+- **leitura** -> id '<<' 'input'
+- **escrita** -> 'console' '<<' escrita_options
+- **escrita_options** -> id | texto_string
+- **atribuicao** -> id '<-' atribuicao_options
+- **atribuicao_options** -> expressão | texto_string
+- **texto_string** -> '"'[a-zA-Z 0-9]'"'
+- **num** -> num_int | num_decimal
+- **operador_relacional** -> '>' | '<' | '>=' | '<=' | '=' | '!='
+- **tipo** -> 'int'| 'float' | 'boolean' | 'string'
+- **operador_logico** -> '&&' | '||' | '!'
+- **id** -> [a-zA-Z][a-zA-Z0-9]\*
+- **num_int** -> [0-9]+
+- **num_decimal** -> [0-9]+.[0-9]+
+- **loop_for** -> 'for' '(' declarar ';' condicional ';' atribuicao ')' '->' '{' bloco '}'
+- **loop_while** -> 'while' '('condicional ')' '->' '{' bloco '}'
