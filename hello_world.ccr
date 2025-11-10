@@ -1,7 +1,7 @@
 int charles()->{
 	int valor;
   valor<<input;
-  int resultado <- valor*100;
+  int resultado <- valor% 2;
   console<<resultado;
 }
 

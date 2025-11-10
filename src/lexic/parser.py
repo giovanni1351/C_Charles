@@ -416,6 +416,13 @@ class Parser:
             and self.exp_prioridade_linha(node)
         ):
             return True
+        if (
+            self.token.lexema == r"%"
+            and self.match_l(r"%", node=node)
+            and self.fator(node)
+            and self.exp_prioridade_linha(node)
+        ):
+            return True
 
         if self.token.lexema in [
             "+",

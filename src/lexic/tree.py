@@ -83,6 +83,9 @@ class Tree:
         if node.nome == "declarar":
             self.declarar(node)
             return
+        if node.nome == "%":
+            self.traducao += " mod "
+            return
         if node.nome == "!=":
             self.traducao += " <> "
             return
