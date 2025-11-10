@@ -37,6 +37,6 @@ class BracketsOperator(AFD):
                 if code.current() == ">":
                     next(code)
                     return Token("START_BLOCK", "->")
-                return Token("LOGIC_OP", "=")
+                return Token("LOGIC_OP", "-")
             case _:
                 return None
